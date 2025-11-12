@@ -99,7 +99,9 @@ export default function Checkout() {
             {cart.map((item, i) => (
               <tr key={i}>
                 <td className="border px-3 py-1">{item.name}</td>
-                <td className="border px-3 py-1">Rp{item.price.toLocaleString()}</td>
+<td className="border px-3 py-1">
+  Rp{item.price ? item.price.toLocaleString() : 0}
+</td>
                 <td className="border px-3 py-1">{item.color || "-"}</td>
               </tr>
             ))}
@@ -169,6 +171,17 @@ export default function Checkout() {
           className="border p-2 w-full rounded"
         ></textarea>
       </div>
+<button
+  onClick={() => {
+    if (confirm("Yakin mau hapus semua item di keranjang?")) {
+      localStorage.removeItem("cart");
+      setCart([]);
+    }
+  }}
+  className="mt-3 w-full py-3 rounded bg-red-600 text-white hover:bg-red-700"
+>
+  🗑️ Hapus Semua Item
+</button>
 
       <button
         onClick={handlePay}
