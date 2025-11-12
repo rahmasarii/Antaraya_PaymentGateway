@@ -5,12 +5,24 @@ import Product from '../../models/Product';
 export default async function handler(req, res) {
   await dbConnect();
   const { method } = req;
-  if (method === 'GET') {
-    const { category } = req.query;
-    const filter = category ? { category } : {};
-    const products = await Product.find(filter).sort('-createdAt');
-    return res.json(products);
+if (method === 'GET') {
+  const { id, category } = req.query;
+
+  // Jika ada parameter id, ambil produk spesifik
+  if (id) {
+    const product = await Product.findById(id);
+    if (!product) {
+      return res.status(404).json({ message: 'Produk tidak ditemukan' });
+    }
+    return res.json(product);
   }
+
+  // Jika tidak ada id, baru pakai filter kategori
+  const filter = category ? { category } : {};
+  const products = await Product.find(filter).sort('-createdAt');
+  return res.json(products);
+}
+
   if (method === 'POST') {
     const p = await Product.create(req.body);
     return res.status(201).json(p);

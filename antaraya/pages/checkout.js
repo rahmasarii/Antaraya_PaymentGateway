@@ -1,197 +1,85 @@
 // pages/checkout.js
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
 export default function Checkout() {
   const [cart, setCart] = useState([]);
-  const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
-    phone: "",
-    courier: "Toko (Gratis)",
-    address: "",
-    addressDesc: "",
-  });
-  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    // ambil data produk dari localStorage
-    const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
-    setCart(storedCart);
+    const stored = JSON.parse(localStorage.getItem("cart") || "[]");
+    setCart(stored);
   }, []);
 
-  const totalPrice = cart.reduce((sum, item) => sum + item.price, 0);
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleQuantityChange = (index, delta) => {
+    const updated = [...cart];
+    updated[index].quantity = Math.max(1, (updated[index].quantity || 1) + delta);
+    setCart(updated);
+    localStorage.setItem("cart", JSON.stringify(updated));
   };
 
-  const handlePay = async () => {
-    if (!form.firstName || !form.lastName || !form.phone || !form.address) {
-      alert("Mohon isi semua data yang wajib diisi");
-      return;
+  const handleRemoveItem = (index) => {
+    if (confirm("Hapus item ini dari keranjang?")) {
+      const updated = cart.filter((_, i) => i !== index);
+      setCart(updated);
+      localStorage.setItem("cart", JSON.stringify(updated));
     }
-
-    setLoading(true);
-
-    try {
-      // kirim ke backend untuk buat transaksi
-      const res = await axios.post("/api/create-transaction", {
-        cart,
-        customer: form,
-      });
-
-      const { token } = res.data;
-
-      // panggil Midtrans Snap popup
-      window.snap.pay(token, {
-        onSuccess: function (result) {
-          alert("Pembayaran berhasil!");
-          console.log(result);
-        },
-        onPending: function (result) {
-          alert("Menunggu pembayaran...");
-          console.log(result);
-        },
-        onError: function (result) {
-          alert("Terjadi kesalahan pembayaran");
-          console.log(result);
-        },
-        onClose: function () {
-          alert("Kamu menutup popup tanpa menyelesaikan pembayaran");
-        },
-      });
-} catch (err) {
-  console.error("Error creating transaction:", err);
-
-  // Tampilkan pesan error dari server kalau ada
-  if (err.response) {
-    alert(`Gagal membuat transaksi: ${err.response.data?.message || "Server error"}`);
-    console.error("Response:", err.response.data);
-  } else if (err.request) {
-    alert("Gagal membuat transaksi: Tidak ada respon dari server");
-  } else {
-    alert("Gagal membuat transaksi: " + err.message);
-  }
-}
-
-
-    setLoading(false);
   };
+
+  const total = cart.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">🧾 Checkout</h1>
+      <h1 className="text-2xl font-bold mb-4">🛒 Keranjang Belanja</h1>
 
-      {/* Daftar produk */}
       {cart.length === 0 ? (
         <p>Keranjang masih kosong.</p>
       ) : (
         <table className="w-full border mb-6">
           <thead>
             <tr className="bg-gray-100">
-              <th className="border px-3 py-1">Nama</th>
+              <th className="border px-3 py-1">Produk</th>
               <th className="border px-3 py-1">Harga</th>
-              <th className="border px-3 py-1">Warna</th>
+              <th className="border px-3 py-1">Jumlah</th>
+              <th className="border px-3 py-1">Aksi</th>
             </tr>
           </thead>
           <tbody>
             {cart.map((item, i) => (
               <tr key={i}>
                 <td className="border px-3 py-1">{item.name}</td>
-<td className="border px-3 py-1">
-  Rp{item.price ? item.price.toLocaleString() : 0}
-</td>
-                <td className="border px-3 py-1">{item.color || "-"}</td>
+                <td className="border px-3 py-1">
+                  Rp{(item.price * (item.quantity || 1)).toLocaleString()}
+                </td>
+                <td className="border px-3 py-1">
+                  <button onClick={() => handleQuantityChange(i, -1)} className="px-2">−</button>
+                  {item.quantity || 1}
+                  <button onClick={() => handleQuantityChange(i, 1)} className="px-2">+</button>
+                </td>
+                <td className="border px-3 py-1">
+                  <button
+                    onClick={() => handleRemoveItem(i)}
+                    className="text-red-600 hover:underline"
+                  >
+                    Hapus
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       )}
 
-      <h2 className="font-semibold text-lg mb-2">Total: Rp{totalPrice.toLocaleString()}</h2>
+      <h2 className="font-semibold text-lg mb-3">Total: Rp{total.toLocaleString()}</h2>
 
-      {/* Form Data Pengguna */}
-      <div className="space-y-3">
-        <input
-          name="firstName"
-          placeholder="First Name *"
-          value={form.firstName}
-          onChange={handleChange}
-          className="border p-2 w-full rounded"
-          required
-        />
-        <input
-          name="lastName"
-          placeholder="Last Name *"
-          value={form.lastName}
-          onChange={handleChange}
-          className="border p-2 w-full rounded"
-          required
-        />
-        <input
-          name="phone"
-          placeholder="Nomor HP *"
-          value={form.phone}
-          onChange={handleChange}
-          className="border p-2 w-full rounded"
-          required
-        />
-
-        <select
-          name="courier"
-          value={form.courier}
-          onChange={handleChange}
-          className="border p-2 w-full rounded"
+      {cart.length > 0 && (
+        <button
+          onClick={() => router.push("/payment")}
+          className="bg-green-600 text-white w-full py-3 rounded hover:bg-green-700"
         >
-          <option value="Toko (Gratis)">Kurir Instan Toko (Gratis)</option>
-          <option value="SiCepat">SiCepat</option>
-          <option value="JNE">JNE</option>
-          <option value="JNT">JNT</option>
-          <option value="Gojek Sameday">Gojek Sameday</option>
-          <option value="Gojek Instant">Gojek Instant</option>
-          <option value="Grab Sameday">Grab Sameday</option>
-          <option value="Grab Instant">Grab Instant</option>
-        </select>
-
-        <textarea
-          name="address"
-          placeholder="Alamat Lengkap *"
-          value={form.address}
-          onChange={handleChange}
-          className="border p-2 w-full rounded"
-          required
-        ></textarea>
-
-        <textarea
-          name="addressDesc"
-          placeholder="Deskripsi Rumah/Kantor (opsional)"
-          value={form.addressDesc}
-          onChange={handleChange}
-          className="border p-2 w-full rounded"
-        ></textarea>
-      </div>
-<button
-  onClick={() => {
-    if (confirm("Yakin mau hapus semua item di keranjang?")) {
-      localStorage.removeItem("cart");
-      setCart([]);
-    }
-  }}
-  className="mt-3 w-full py-3 rounded bg-red-600 text-white hover:bg-red-700"
->
-  🗑️ Hapus Semua Item
-</button>
-
-      <button
-        onClick={handlePay}
-        disabled={loading || cart.length === 0}
-        className={`mt-5 w-full py-3 rounded text-white ${
-          loading ? "bg-gray-400" : "bg-green-600 hover:bg-green-700"
-        }`}
-      >
-        {loading ? "Memproses..." : "💳 Bayar Sekarang"}
-      </button>
+          Lanjut ke Pembayaran 💳
+        </button>
+      )}
     </div>
   );
 }
