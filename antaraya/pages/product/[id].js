@@ -7,45 +7,58 @@ export default function ProductDetail() {
   const { id } = router.query;
 
   const [product, setProduct] = useState(null);
-  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [displayImage, setDisplayImage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!id) return; // tunggu sampai router siap
+    if (!id) return;
 
-    const fetchProduct = async () => {
+    (async () => {
       try {
         setLoading(true);
         const res = await axios.get(`/api/products?id=${id}`);
         const data = res.data;
         setProduct(data);
-        // otomatis pilih warna pertama kalau ada
+
+        // Default color
         if (data.colors?.length > 0) {
-          setSelectedColor(data.colors[0]);
+          const defaultColor = data.colors[0];
+          setSelectedColor(defaultColor);
+          setDisplayImage(defaultColor.image || data.displayImage);
+        } else {
+          setDisplayImage(data.displayImage);
         }
+
       } catch (err) {
-        console.error("Error fetching product:", err);
         setError("Gagal memuat produk");
       } finally {
         setLoading(false);
       }
-    };
-
-    fetchProduct();
+    })();
   }, [id]);
 
-  const addToCart = () => {
-    if (!product) return;
+  if (loading) return <p className="p-5 text-center">Memuat produk...</p>;
+  if (error) return <p className="p-5 text-red-600 text-center">{error}</p>;
+  if (!product) return <p className="p-5 text-center">Produk tidak ditemukan.</p>;
 
+  const onColorChange = (colorName) => {
+    const colorObj = product.colors.find(c => c.colorName === colorName);
+    setSelectedColor(colorObj);
+    setDisplayImage(colorObj?.image || product.displayImage);
+  };
+
+  const addToCart = () => {
     const existing = JSON.parse(localStorage.getItem("cart") || "[]");
 
     const item = {
       _id: product._id,
-      name: product.name || "Produk Tanpa Nama",
-      price: product.price || 0,
-      color: selectedColor || "",
-      qty: 1,
+      name: product.name,
+      price: product.price,
+      color: selectedColor?.colorName || "",
+    displayImage: displayImage, 
+      qty: 1
     };
 
     localStorage.setItem("cart", JSON.stringify([...existing, item]));
@@ -53,72 +66,99 @@ export default function ProductDetail() {
     router.push("/checkout");
   };
 
-  // tampilkan status loading / error
-  if (loading) return <p className="p-5 text-center">Memuat produk...</p>;
-  if (error) return <p className="p-5 text-red-600 text-center">{error}</p>;
-  if (!product) return <p className="p-5 text-center">Produk tidak ditemukan.</p>;
-
   return (
     <div className="p-5 max-w-md mx-auto">
+
+      {/* MAIN IMAGE */}
       <img
-        src={product.image || "/no-image.png"}
-        alt={product.name}
+        src={displayImage || "/no-image.png"}
         className="w-full h-64 object-cover rounded mb-4"
       />
 
       <h1 className="text-2xl font-bold mb-2">{product.name}</h1>
-      <p className="text-gray-600 mb-1">{product.category}</p>
+
       <p className="text-green-700 font-semibold mb-4">
-        Rp {product.price ? product.price.toLocaleString() : 0}
+        Rp {product.price.toLocaleString()}
       </p>
 
-      <p className="text-gray-800 mb-6">{product.description}</p>
+      <p className="mb-4">{product.description}</p>
 
-      {product.colors?.length > 0 && (
-        <div className="mt-4">
-          <label className="block mb-2 font-medium">Pilih warna:</label>
-          <select
-            value={selectedColor}
-            onChange={(e) => setSelectedColor(e.target.value)}
-            className="border rounded p-2 w-full"
-          >
-            {product.colors.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
+      {/* GALLERY IMAGES */}
+      {Array.isArray(product.galleryImages) && product.galleryImages.length > 0 && (
+        <div className="flex gap-2 overflow-x-auto mb-4">
+          {product.galleryImages.map((img, i) => (
+            <img
+              key={i}
+              src={img}
+              onClick={() => {
+                setSelectedColor(null);
+                setDisplayImage(img);
+              }}
+              className="w-20 h-20 object-cover rounded cursor-pointer border hover:border-green-600"
+            />
+          ))}
         </div>
       )}
 
+      {/* COLOR DROPDOWN */}
+      {Array.isArray(product.colors) && product.colors.length > 0 && (
+        <div className="mb-6">
+          <label className="block font-semibold mb-2">Pilih warna:</label>
+
+          {/* DROPDOWN */}
+          <select
+            value={selectedColor?.colorName || ""}
+            onChange={(e) => onColorChange(e.target.value)}
+            className="border p-2 w-full rounded mb-3"
+          >
+            {product.colors.map((c, i) => (
+              <option key={i} value={c.colorName}>
+                {c.colorName}
+              </option>
+            ))}
+          </select>
+
+          {/* PREVIEW IMAGE OF SELECTED COLOR */}
+          {selectedColor && (
+            <div className="flex items-center gap-3 border p-3 rounded">
+              <img
+                src={selectedColor.image || "/no-image.png"}
+                className="w-20 h-20 object-cover rounded"
+              />
+              <div>
+                <p className="font-medium">{selectedColor.colorName}</p>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ADD TO CART */}
       <button
         onClick={addToCart}
-        className="mt-5 w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded"
+        className="w-full bg-green-600 text-white py-2 rounded mt-4"
       >
         Tambah ke Keranjang 🛒
       </button>
 
+      {/* BUY NOW */}
       <button
-  onClick={() => {
-    if (!product) return;
+        onClick={() => {
+          const item = {
+            _id: product._id,
+            name: product.name,
+            price: product.price,
+            color: selectedColor?.colorName || "",
+            qty: 1
+          };
 
-    // simpan produk ke cart (supaya bisa dibaca di /payment)
-    const item = {
-      _id: product._id,
-      name: product.name,
-      price: product.price,
-      color: selectedColor,
-      qty: 1,
-    };
-
-    localStorage.setItem("cart", JSON.stringify([item])); // overwrite biar cuma 1 item
-    router.push("/payment"); // langsung ke halaman payment
-  }}
-  className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded"
->
-  Bayar Sekarang 💸
-</button>
-
+          localStorage.setItem("cart", JSON.stringify([item]));
+          router.push("/payment");
+        }}
+        className="w-full bg-blue-600 text-white py-2 rounded mt-3"
+      >
+        Bayar Sekarang 💸
+      </button>
 
     </div>
   );

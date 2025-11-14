@@ -1,59 +1,112 @@
 // pages/select-items.js
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import Link from 'next/link';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Link from "next/link";
 
-export default function SelectItems(){
+export default function SelectItems() {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
 
-  useEffect(()=>{ axios.get('/api/products').then(r=>setProducts(r.data)); },[]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupProduct, setPopupProduct] = useState(null);
+  const [selectedColor, setSelectedColor] = useState(null);
 
-function addToCart(prod) {
-  const item = {
-    _id: prod._id,
-    name: prod.name || "Produk Tanpa Nama",
-    price: prod.price || 0,
-    qty: 1,
-    color: prod.colors?.[0] || ""
-  };
+  useEffect(() => {
+    axios.get("/api/products").then((r) => setProducts(r.data));
 
-  // buat cart baru dengan data lama + item baru
-  const newCart = [...cart, item];
+    const stored = JSON.parse(localStorage.getItem("cart") || "[]");
+    setCart(stored);
+  }, []);
 
-  // update state dan localStorage bersamaan
-  setCart(newCart);
-  localStorage.setItem("cart", JSON.stringify(newCart));
+  function openColorPopup(prod) {
+    setPopupProduct(prod);
 
-  alert("Produk ditambahkan ke keranjang!");
-}
+    if (prod.colors?.length > 0) {
+      setSelectedColor(prod.colors[0]);
+    } else {
+      setSelectedColor(null);
+    }
 
+    setShowPopup(true);
+  }
+
+  function addToCart() {
+    const prod = popupProduct;
+
+    const item = {
+      _id: prod._id,
+      name: prod.name,
+      price: prod.price,
+      color: selectedColor?.colorName || "",
+      displayImage:
+        selectedColor?.image || prod.displayImage || "/no-image.png",
+      qty: 1,
+    };
+
+    const newCart = [...cart, item];
+    setCart(newCart);
+    localStorage.setItem("cart", JSON.stringify(newCart));
+
+    alert("Produk ditambahkan ke keranjang!");
+    setShowPopup(false);
+  }
 
   return (
     <div>
       <h1>Select Items</h1>
+
       <Link href="/checkout">Go to Checkout ({cart.length})</Link>
+
       <div>
-        {products.map(p=>(
+        {products.map((p) => (
           <div key={p._id} className="border p-3 my-2 rounded">
-  <h3 className="font-bold">{p.name}</h3>
-  <p>{p.category} - Rp {p.price}</p>
+            <img
+              src={p.displayImage || "/no-image.png"}
+              className="w-full h-40 object-cover rounded mb-2"
+            />
 
-  <button
-    onClick={() => addToCart(p)}
-    className="bg-green-600 text-white px-3 py-1 rounded mt-2"
-  >
-    Tambah ke Keranjang
-  </button>
+            <h3 className="font-bold">{p.name}</h3>
+            <p>Rp {p.price}</p>
 
-  <Link href={`/product/${p._id}`} className="text-blue-600 underline ml-3">
-    Lihat Detail
-  </Link>
-</div>
+       <button
+  onClick={() => {
+    const firstColor =
+      Array.isArray(p.colors) && p.colors.length > 0
+        ? p.colors[0]
+        : null;
+
+    const item = {
+      _id: p._id,
+      name: p.name,
+      price: p.price,
+      color: firstColor?.colorName || "",
+      displayImage: firstColor?.image || p.displayImage,
+      qty: 1,
+    };
+
+    const newCart = [...cart, item];
+    setCart(newCart);
+    localStorage.setItem("cart", JSON.stringify(newCart));
+
+    alert("Produk ditambahkan ke keranjang!");
+  }}
+  className="bg-green-600 text-white px-3 py-1 rounded mt-2"
+>
+  Tambah ke Keranjang
+</button>
 
 
+            <Link href={`/product/${p._id}`} className="text-blue-600 underline ml-3">
+              Lihat Detail
+            </Link>
+          </div>
         ))}
       </div>
+
+     
+        
+     
+      
     </div>
-  )
+  );
 }

@@ -1,4 +1,3 @@
-// pages/checkout.js
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
@@ -44,18 +43,38 @@ export default function Checkout() {
               <th className="border px-3 py-1">Aksi</th>
             </tr>
           </thead>
+
           <tbody>
             {cart.map((item, i) => (
               <tr key={i}>
-                <td className="border px-3 py-1">{item.name}</td>
+                
+                {/* PRODUK: gambar + nama + warna */}
+                <td className="border px-3 py-1 flex items-center gap-3">
+
+                  <img 
+                    src={item.displayImage || "/no-image.png"}
+                    className="w-16 h-16 object-cover rounded"
+                  />
+
+                  <div>
+                    <div className="font-semibold">{item.name}</div>
+                    {item.color && (
+                      <div className="text-sm text-gray-600">Warna: {item.color}</div>
+                    )}
+                  </div>
+
+                </td>
+
                 <td className="border px-3 py-1">
                   Rp{(item.price * (item.quantity || 1)).toLocaleString()}
                 </td>
+
                 <td className="border px-3 py-1">
                   <button onClick={() => handleQuantityChange(i, -1)} className="px-2">−</button>
                   {item.quantity || 1}
                   <button onClick={() => handleQuantityChange(i, 1)} className="px-2">+</button>
                 </td>
+
                 <td className="border px-3 py-1">
                   <button
                     onClick={() => handleRemoveItem(i)}
@@ -64,13 +83,16 @@ export default function Checkout() {
                     Hapus
                   </button>
                 </td>
+
               </tr>
             ))}
           </tbody>
         </table>
       )}
 
-      <h2 className="font-semibold text-lg mb-3">Total: Rp{total.toLocaleString()}</h2>
+      <h2 className="font-semibold text-lg mb-3">
+        Total: Rp{total.toLocaleString()}
+      </h2>
 
       {cart.length > 0 && (
         <button
