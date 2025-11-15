@@ -39,6 +39,11 @@ export default function AdminDashboard() {
       .then(setTransactions);
   }, []);
 
+  const handleLogout = async () => {
+    await fetch("/api/admin/logout", { method: "POST" });
+    window.location.href = "/login";
+  };
+
   const formatDate = (year, month, day) => {
     return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(
       2,
@@ -46,9 +51,7 @@ export default function AdminDashboard() {
     )}`;
   };
 
-  // =============================
   // DAILY CHART
-  // =============================
   const dailyLabels = daily.map((d) => d._id.date);
   const dailyValues = daily.map((d) => d.totalSales);
 
@@ -64,9 +67,7 @@ export default function AdminDashboard() {
     ],
   };
 
-  // =============================
   // WEEKLY CHART
-  // =============================
   const weeklyLabels = weekly.map((w) => {
     const monday = new Date(w._id.year, 0, 1 + (w._id.week - 1) * 7);
     return formatDate(
@@ -90,9 +91,7 @@ export default function AdminDashboard() {
     ],
   };
 
-  // =============================
   // MONTHLY CHART
-  // =============================
   const monthlyLabels = monthly.map((m) =>
     formatDate(m._id.year, m._id.month, 1)
   );
@@ -122,9 +121,24 @@ export default function AdminDashboard() {
     <div style={{ padding: "40px" }}>
       <h1>Admin Dashboard</h1>
 
-      {/* ===================================== */}
-      {/* BUTTON CHOOSE CHART */}
-      {/* ===================================== */}
+      {/* LOGOUT BUTTON */}
+      <div style={{ marginTop: "15px" }}>
+        <button
+          onClick={handleLogout}
+          style={{
+            padding: "8px 16px",
+            background: "red",
+            color: "white",
+            borderRadius: "8px",
+            cursor: "pointer",
+            border: "none",
+          }}
+        >
+          Logout
+        </button>
+      </div>
+
+      {/* CHART SELECT */}
       <div style={{ marginTop: "20px" }}>
         <button
           onClick={() => setSelectedChart("daily")}
@@ -148,9 +162,7 @@ export default function AdminDashboard() {
         </button>
       </div>
 
-      {/* ===================================== */}
-      {/* CHART SECTION */}
-      {/* ===================================== */}
+      {/* CHART DISPLAY */}
       <div style={{ marginTop: "40px" }}>
         <h2>
           {selectedChart === "daily"
@@ -165,9 +177,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* ===================================== */}
-      {/* TRANSACTION HISTORY */}
-      {/* ===================================== */}
+      {/* TRANSACTION TABLE */}
       <div style={{ marginTop: "50px" }}>
         <h2>🧾 Riwayat Transaksi</h2>
 
@@ -188,8 +198,7 @@ export default function AdminDashboard() {
               <th style={th}>Courier</th>
               <th style={th}>Address</th>
               <th style={th}>Description</th>
-                            <th style={th}>Status</th>
-
+              <th style={th}>Status</th>
               <th style={th}>Total</th>
               <th style={th}>Tanggal</th>
             </tr>
@@ -211,7 +220,6 @@ export default function AdminDashboard() {
                     </div>
                   ))}
                 </td>
-                
 
                 <td style={td}>{c.customer?.courier}</td>
                 <td style={td}>{c.customer?.address}</td>
