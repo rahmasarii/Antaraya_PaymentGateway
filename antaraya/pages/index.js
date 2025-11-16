@@ -1,59 +1,12 @@
 import { useState, useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
-
-// Data dummy untuk testing
-const DUMMY_PRODUCTS = [
-  {
-    _id: "1",
-    name: "Jive Active Earbuds",
-    price: 149999,
-    description: "Express Your Taste - Earbuds TWS dengan kualitas suara premium dan Ultra Bass Technology",
-    displayImage: "https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/eb7d72ae-4b73-4396-bdb5-74601b698c9e/11.png?format=1500w",
-    colors: [
-      { colorName: "Black", image: "/images/jive-active-black.jpg" },
-      { colorName: "White", image: "/images/jive-active-white.jpg" }
-    ],
-    status: "READY"
-  },
-  {
-    _id: "2",
-    name: "Bass Pro Headphones",
-    price: 299999,
-    description: "Professional grade headphones dengan active noise cancellation",
-    displayImage: "/images/bass-pro.jpg",
-    colors: [
-      { colorName: "Black", image: "/images/bass-pro-black.jpg" }
-    ],
-    status: "READY"
-  },
-  {
-    _id: "3",
-    name: "Studio Monitor Speaker",
-    price: 899999,
-    description: "Studio quality monitor speakers untuk pengalaman audio sempurna",
-    displayImage: "/images/studio-monitor.jpg",
-    colors: [
-      { colorName: "Wood", image: "/images/studio-monitor-wood.jpg" }
-    ],
-    status: "HABIS"
-  },
-  {
-    _id: "4",
-    name: "Wireless Soundbar",
-    price: 1299999,
-    description: "Premium soundbar dengan Dolby Atmos technology",
-    displayImage: "/images/soundbar.jpg",
-    colors: [
-      { colorName: "Black", image: "/images/soundbar-black.jpg" }
-    ],
-    status: "READY"
-  }
-];
+import axios from 'axios';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [currentPage, setCurrentPage] = useState(1);
@@ -70,18 +23,15 @@ export default function ProductsPage() {
   const fetchProducts = async () => {
     try {
       setLoading(true);
+      setError(null);
       
-      // TESTING MODE: Gunakan dummy data
-      // Comment bagian ini setelah MongoDB siap
-      await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
-      setProducts(DUMMY_PRODUCTS);
-      
-      // PRODUCTION MODE: Uncomment ini untuk pakai MongoDB
-      // const response = await axios.get('/api/products');
-      // setProducts(response.data);
+      // Fetch dari API MongoDB
+      const response = await axios.get('/api/products');
+      setProducts(response.data);
       
     } catch (error) {
       console.error('Error fetching products:', error);
+      setError('Gagal memuat produk. Silakan coba lagi.');
     } finally {
       setLoading(false);
     }
@@ -90,12 +40,15 @@ export default function ProductsPage() {
   const filterProducts = () => {
     let filtered = [...products];
 
+    // Filter berdasarkan search query
     if (searchQuery) {
       filtered = filtered.filter(product =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.description?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
+    // Filter berdasarkan status
     if (statusFilter !== 'ALL') {
       filtered = filtered.filter(product => product.status === statusFilter);
     }
@@ -104,7 +57,7 @@ export default function ProductsPage() {
     setCurrentPage(1);
   };
 
-  // ... sisa code sama
+  // Pagination logic
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
@@ -117,7 +70,7 @@ export default function ProductsPage() {
 
   return (
     <div className="main-container">
-      {/* ... sisa JSX sama persis ... */}
+      {/* Navbar */}
       <nav className="navbar">
         <div className="navbar-container">
           <div className="navbar-logo">
@@ -126,6 +79,7 @@ export default function ProductsPage() {
         </div>
       </nav>
 
+      {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-content">
           <h1 className="hero-title">Premium Audio Collection</h1>
@@ -133,9 +87,11 @@ export default function ProductsPage() {
         </div>
       </section>
 
+      {/* Filter Section */}
       <section className="filter-section">
         <div className="container">
           <div className="filter-container">
+            {/* Search Input */}
             <div className="search-wrapper">
               <input
                 type="text"
@@ -149,6 +105,7 @@ export default function ProductsPage() {
               </svg>
             </div>
 
+            {/* Status Filter */}
             <div className="status-filter">
               <button
                 className={`filter-btn ${statusFilter === 'ALL' ? 'active' : ''}`}
@@ -170,6 +127,7 @@ export default function ProductsPage() {
               </button>
             </div>
 
+            {/* Results Count */}
             <div className="results-count">
               Menampilkan {filteredProducts.length} produk
             </div>
@@ -177,8 +135,20 @@ export default function ProductsPage() {
         </div>
       </section>
 
+      {/* Products Section */}
       <section className="products-section">
         <div className="container">
+          {/* Error State */}
+          {error && (
+            <div className="error-container">
+              <p className="error-message">{error}</p>
+              <button onClick={fetchProducts} className="retry-btn">
+                Coba Lagi
+              </button>
+            </div>
+          )}
+
+          {/* Loading State */}
           {loading ? (
             <div className="loading-container">
               <div className="loading-spinner"></div>
@@ -186,12 +156,14 @@ export default function ProductsPage() {
             </div>
           ) : currentProducts.length > 0 ? (
             <>
+              {/* Products Grid */}
               <div className="products-grid">
                 {currentProducts.map((product) => (
                   <ProductCard key={product._id} product={product} />
                 ))}
               </div>
 
+              {/* Pagination */}
               {totalPages > 1 && (
                 <div className="pagination">
                   <button
@@ -225,6 +197,7 @@ export default function ProductsPage() {
               )}
             </>
           ) : (
+            /* Empty State */
             <div className="empty-state">
               <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
                 <circle cx="50" cy="50" r="40" stroke="#E5E7EB" strokeWidth="2"/>
@@ -237,6 +210,7 @@ export default function ProductsPage() {
         </div>
       </section>
 
+      {/* Footer */}
       <footer className="footer">
         <div className="container">
           <div className="footer-content">

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import axios from "axios";
 import "../styles/products.css"; 
+import '../styles/checkout.css'
 
 export default function App({ Component, pageProps }) {
   // Enable cookies for all axios requests

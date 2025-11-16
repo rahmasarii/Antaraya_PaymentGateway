@@ -9,6 +9,7 @@ export default function ProductDetail() {
   const [product, setProduct] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
   const [displayImage, setDisplayImage] = useState(null);
+  const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -39,17 +40,82 @@ export default function ProductDetail() {
     })();
   }, [id]);
 
-  if (loading) return <p className="p-5 text-center">Memuat produk...</p>;
-  if (error) return <p className="p-5 text-red-600 text-center">{error}</p>;
-  if (!product) return <p className="p-5 text-center">Produk tidak ditemukan.</p>;
+  if (loading) {
+    return (
+      <div className="main-container">
+        <nav className="navbar">
+          <div className="navbar-container">
+            <div className="navbar-logo">
+              <h1>ANTARAYA</h1>
+            </div>
+          </div>
+        </nav>
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Memuat produk...</p>
+        </div>
+      </div>
+    );
+  }
 
-  const onColorChange = (colorName) => {
-    const colorObj = product.colors.find(c => c.colorName === colorName);
+  if (error) {
+    return (
+      <div className="main-container">
+        <nav className="navbar">
+          <div className="navbar-container">
+            <div className="navbar-logo">
+              <h1>ANTARAYA</h1>
+            </div>
+          </div>
+        </nav>
+        <div className="error-container" style={{ padding: '3rem', textAlign: 'center' }}>
+          <p className="error-message">{error}</p>
+          <button onClick={() => router.push('/')} className="retry-btn" style={{ marginTop: '1rem' }}>
+            Kembali ke Beranda
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="main-container">
+        <nav className="navbar">
+          <div className="navbar-container">
+            <div className="navbar-logo">
+              <h1>ANTARAYA</h1>
+            </div>
+          </div>
+        </nav>
+        <div className="empty-state">
+          <h3>Produk tidak ditemukan</h3>
+          <button onClick={() => router.push('/')} style={{ marginTop: '1rem', padding: '0.75rem 1.5rem', background: '#1a1a1a', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>
+            Kembali ke Beranda
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const onColorChange = (colorObj) => {
     setSelectedColor(colorObj);
     setDisplayImage(colorObj?.image || product.displayImage);
   };
 
+  const handleQuantityChange = (change) => {
+    const newQty = quantity + change;
+    if (newQty >= 1 && newQty <= 99) {
+      setQuantity(newQty);
+    }
+  };
+
   const addToCart = () => {
+    if (product.status === 'HABIS') {
+      alert('Produk sedang habis stok');
+      return;
+    }
+
     const existing = JSON.parse(localStorage.getItem("cart") || "[]");
 
     const item = {
@@ -57,8 +123,8 @@ export default function ProductDetail() {
       name: product.name,
       price: product.price,
       color: selectedColor?.colorName || "",
-    displayImage: displayImage, 
-      qty: 1
+      displayImage: displayImage,
+      qty: quantity
     };
 
     localStorage.setItem("cart", JSON.stringify([...existing, item]));
@@ -66,100 +132,233 @@ export default function ProductDetail() {
     router.push("/checkout");
   };
 
+  const buyNow = () => {
+    if (product.status === 'HABIS') {
+      alert('Produk sedang habis stok');
+      return;
+    }
+
+    const item = {
+      _id: product._id,
+      name: product.name,
+      price: product.price,
+      color: selectedColor?.colorName || "",
+      displayImage: displayImage,
+      qty: quantity
+    };
+
+    localStorage.setItem("cart", JSON.stringify([item]));
+    router.push("/payment");
+  };
+
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+    }).format(price);
+  };
+
   return (
-    <div className="p-5 max-w-md mx-auto">
-
-      {/* MAIN IMAGE */}
-      <img
-        src={displayImage || "/no-image.png"}
-        className="w-full h-64 object-cover rounded mb-4"
-      />
-
-      <h1 className="text-2xl font-bold mb-2">{product.name}</h1>
-
-      <p className="text-green-700 font-semibold mb-4">
-        Rp {product.price.toLocaleString()}
-      </p>
-
-      <p className="mb-4">{product.description}</p>
-
-      {/* GALLERY IMAGES */}
-      {Array.isArray(product.galleryImages) && product.galleryImages.length > 0 && (
-        <div className="flex gap-2 overflow-x-auto mb-4">
-          {product.galleryImages.map((img, i) => (
-            <img
-              key={i}
-              src={img}
-              onClick={() => {
-                setSelectedColor(null);
-                setDisplayImage(img);
-              }}
-              className="w-20 h-20 object-cover rounded cursor-pointer border hover:border-green-600"
-            />
-          ))}
+    <div className="main-container">
+      {/* Navbar */}
+      <nav className="navbar">
+        <div className="navbar-container">
+          <div className="navbar-logo">
+            <h1 style={{ cursor: 'pointer' }} onClick={() => router.push('/')}>ANTARAYA</h1>
+          </div>
+          <div className="navbar-menu">
+            <button 
+              onClick={() => router.push('/')} 
+              className="nav-link"
+              style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+            >
+              ← Kembali
+            </button>
+          </div>
         </div>
-      )}
+      </nav>
 
-      {/* COLOR DROPDOWN */}
-      {Array.isArray(product.colors) && product.colors.length > 0 && (
-        <div className="mb-6">
-          <label className="block font-semibold mb-2">Pilih warna:</label>
+      {/* Product Detail Section */}
+      <section className="product-detail-section">
+        <div className="container">
+          <div className="product-detail-grid">
+            
+            {/* Left Side - Gallery */}
+            <div className="product-gallery">
+              {/* Main Image */}
+              <div className="main-image-container">
+                <img
+                  src={displayImage || "/no-image.png"}
+                  alt={product.name}
+                  className="main-image"
+                />
+              </div>
 
-          {/* DROPDOWN */}
-          <select
-            value={selectedColor?.colorName || ""}
-            onChange={(e) => onColorChange(e.target.value)}
-            className="border p-2 w-full rounded mb-3"
-          >
-            {product.colors.map((c, i) => (
-              <option key={i} value={c.colorName}>
-                {c.colorName}
-              </option>
-            ))}
-          </select>
+              {/* Thumbnail Gallery */}
+              {Array.isArray(product.galleryImages) && product.galleryImages.length > 0 && (
+                <div className="thumbnail-gallery">
+                  {/* Display Image as first thumbnail */}
+                  <div 
+                    className={`thumbnail ${displayImage === product.displayImage ? 'active' : ''}`}
+                    onClick={() => {
+                      setSelectedColor(null);
+                      setDisplayImage(product.displayImage);
+                    }}
+                  >
+                    <img src={product.displayImage || "/no-image.png"} alt="Main" />
+                  </div>
+                  
+                  {/* Gallery images */}
+                  {product.galleryImages.map((img, i) => (
+                    <div 
+                      key={i}
+                      className={`thumbnail ${displayImage === img ? 'active' : ''}`}
+                      onClick={() => {
+                        setSelectedColor(null);
+                        setDisplayImage(img);
+                      }}
+                    >
+                      <img src={img} alt={`Gallery ${i + 1}`} />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
 
-          {/* PREVIEW IMAGE OF SELECTED COLOR */}
-          {selectedColor && (
-            <div className="flex items-center gap-3 border p-3 rounded">
-              <img
-                src={selectedColor.image || "/no-image.png"}
-                className="w-20 h-20 object-cover rounded"
-              />
-              <div>
-                <p className="font-medium">{selectedColor.colorName}</p>
+            {/* Right Side - Product Info */}
+            <div className="product-detail-info">
+              
+              {/* Product Name */}
+              <h1 className="detail-product-name">{product.name}</h1>
+
+              {/* Price */}
+              <div className="detail-product-price">
+                {formatPrice(product.price)}
+              </div>
+
+              {/* Status */}
+              <div className="product-status-container">
+                <span className={`product-status ${product.status === 'READY' ? 'ready' : 'out'}`}>
+                  {product.status === 'READY' ? '✓ Ready Stock' : '✗ Stok Habis'}
+                </span>
+              </div>
+
+              {/* Description */}
+              {product.description && (
+                <div className="product-description">
+                  <h3>Deskripsi Produk</h3>
+                  <p>{product.description}</p>
+                </div>
+              )}
+
+              {/* Color Selection */}
+              {Array.isArray(product.colors) && product.colors.length > 0 && (
+                <div className="color-selection">
+                  <h3>Pilih Warna</h3>
+                  <div className="color-options">
+                    {product.colors.map((color, i) => (
+                      <div
+                        key={i}
+                        className={`color-option ${selectedColor?.colorName === color.colorName ? 'selected' : ''}`}
+                        onClick={() => onColorChange(color)}
+                      >
+                        <div 
+                          className="color-preview"
+                          style={{ 
+                            backgroundColor: color.colorName.toLowerCase(),
+                            border: color.colorName.toLowerCase() === 'white' ? '2px solid #e5e7eb' : 'none'
+                          }}
+                        />
+                        <span>{color.colorName}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Quantity Selector */}
+              <div className="quantity-selector">
+                <h3>Jumlah</h3>
+                <div className="quantity-controls">
+                  <button 
+                    className="qty-btn"
+                    onClick={() => handleQuantityChange(-1)}
+                    disabled={quantity <= 1}
+                  >
+                    −
+                  </button>
+                  <input 
+                    type="number" 
+                    className="qty-input"
+                    value={quantity}
+                    onChange={(e) => {
+                      const val = parseInt(e.target.value) || 1;
+                      setQuantity(Math.max(1, Math.min(99, val)));
+                    }}
+                    min="1"
+                    max="99"
+                  />
+                  <button 
+                    className="qty-btn"
+                    onClick={() => handleQuantityChange(1)}
+                    disabled={quantity >= 99}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="action-buttons">
+                <button
+                  onClick={addToCart}
+                  className="btn-add-cart"
+                  disabled={product.status === 'HABIS'}
+                >
+                  🛒 Tambah ke Keranjang
+                </button>
+                <button
+                  onClick={buyNow}
+                  className="btn-buy-now"
+                  disabled={product.status === 'HABIS'}
+                >
+                  💳 Beli Sekarang
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="footer">
+        <div className="container">
+          <div className="footer-content">
+            <div className="footer-section">
+              <h3>ANTARAYA</h3>
+              <p>Premium audio equipment untuk pengalaman mendengar terbaik Anda.</p>
+            </div>
+            <div className="footer-section">
+              <h4>Kontak</h4>
+              <p>Email: info@antaraya.id</p>
+              <p>Phone: +62 xxx xxxx xxxx</p>
+            </div>
+            <div className="footer-section">
+              <h4>Follow Us</h4>
+              <div className="social-links">
+                <a href="#" className="social-link">Instagram</a>
+                <a href="#" className="social-link">Facebook</a>
+                <a href="#" className="social-link">Twitter</a>
               </div>
             </div>
-          )}
+          </div>
+          <div className="footer-bottom">
+            <p>© 2024 Antaraya. All rights reserved.</p>
+          </div>
         </div>
-      )}
-
-      {/* ADD TO CART */}
-      <button
-        onClick={addToCart}
-        className="w-full bg-green-600 text-white py-2 rounded mt-4"
-      >
-        Tambah ke Keranjang 🛒
-      </button>
-
-      {/* BUY NOW */}
-      <button
-        onClick={() => {
-          const item = {
-            _id: product._id,
-            name: product.name,
-            price: product.price,
-            color: selectedColor?.colorName || "",
-            qty: 1
-          };
-
-          localStorage.setItem("cart", JSON.stringify([item]));
-          router.push("/payment");
-        }}
-        className="w-full bg-blue-600 text-white py-2 rounded mt-3"
-      >
-        Bayar Sekarang 💸
-      </button>
-
+      </footer>
     </div>
   );
 }

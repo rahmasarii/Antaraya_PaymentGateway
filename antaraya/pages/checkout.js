@@ -3,16 +3,19 @@ import { useRouter } from "next/router";
 
 export default function Checkout() {
   const [cart, setCart] = useState([]);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("cart") || "[]");
     setCart(stored);
+    setLoading(false);
   }, []);
 
   const handleQuantityChange = (index, delta) => {
     const updated = [...cart];
-    updated[index].quantity = Math.max(1, (updated[index].quantity || 1) + delta);
+    const newQty = Math.max(1, (updated[index].qty || 1) + delta);
+    updated[index].qty = newQty;
     setCart(updated);
     localStorage.setItem("cart", JSON.stringify(updated));
   };
@@ -25,83 +28,252 @@ export default function Checkout() {
     }
   };
 
-  const total = cart.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
+  const handleClearCart = () => {
+    if (confirm("Kosongkan semua item di keranjang?")) {
+      setCart([]);
+      localStorage.setItem("cart", JSON.stringify([]));
+    }
+  };
+
+  const subtotal = cart.reduce((sum, item) => sum + item.price * (item.qty || 1), 0);
+  const tax = subtotal * 0.11; // PPN 11%
+  const total = subtotal + tax;
+
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+    }).format(price);
+  };
+
+  if (loading) {
+    return (
+      <div className="main-container">
+        <nav className="navbar">
+          <div className="navbar-container">
+            <div className="navbar-logo">
+              <h1 style={{ cursor: 'pointer' }} onClick={() => router.push('/')}>ANTARAYA</h1>
+            </div>
+          </div>
+        </nav>
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Memuat keranjang...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">🛒 Keranjang Belanja</h1>
+    <div className="main-container">
+      {/* Navbar */}
+      <nav className="navbar">
+        <div className="navbar-container">
+          <div className="navbar-logo">
+            <h1 style={{ cursor: 'pointer' }} onClick={() => router.push('/')}>ANTARAYA</h1>
+          </div>
+          <div className="navbar-menu">
+            <button 
+              onClick={() => router.push('/')} 
+              className="nav-link"
+              style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+            >
+              ← Kembali Belanja
+            </button>
+          </div>
+        </div>
+      </nav>
 
-      {cart.length === 0 ? (
-        <p>Keranjang masih kosong.</p>
-      ) : (
-        <table className="w-full border mb-6">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="border px-3 py-1">Produk</th>
-              <th className="border px-3 py-1">Harga</th>
-              <th className="border px-3 py-1">Jumlah</th>
-              <th className="border px-3 py-1">Aksi</th>
-            </tr>
-          </thead>
+      {/* Checkout Section */}
+      <section className="checkout-section">
+        <div className="container">
+          <div className="checkout-header">
+            <h1 className="checkout-title">🛒 Keranjang Belanja</h1>
+            {cart.length > 0 && (
+              <button onClick={handleClearCart} className="btn-clear-cart">
+                Kosongkan Keranjang
+              </button>
+            )}
+          </div>
 
-          <tbody>
-            {cart.map((item, i) => (
-              <tr key={i}>
+          {cart.length === 0 ? (
+            <div className="empty-cart">
+              <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+                <circle cx="60" cy="60" r="50" stroke="#E5E7EB" strokeWidth="3"/>
+                <path d="M40 50h40M40 60h40M40 70h30" stroke="#E5E7EB" strokeWidth="3" strokeLinecap="round"/>
+              </svg>
+              <h3>Keranjang Belanja Kosong</h3>
+              <p>Belum ada produk yang ditambahkan ke keranjang</p>
+              <button 
+                onClick={() => router.push('/')} 
+                className="btn-shop-now"
+              >
+                Mulai Belanja
+              </button>
+            </div>
+          ) : (
+            <div className="checkout-content">
+              
+              {/* Cart Items */}
+              <div className="cart-items-section">
+                <div className="cart-items-header">
+                  <h2>Item Keranjang ({cart.length})</h2>
+                </div>
+
+                <div className="cart-items-list">
+                  {cart.map((item, i) => (
+                    <div key={i} className="cart-item">
+                      
+                      {/* Product Image */}
+                      <div className="cart-item-image">
+                        <img 
+                          src={item.displayImage || "/no-image.png"}
+                          alt={item.name}
+                        />
+                      </div>
+
+                      {/* Product Info */}
+                      <div className="cart-item-info">
+                        <h3 className="cart-item-name">{item.name}</h3>
+                        {item.color && (
+                          <p className="cart-item-variant">
+                            <span className="variant-label">Warna:</span>
+                            <span className="variant-value">{item.color}</span>
+                          </p>
+                        )}
+                        <p className="cart-item-price">{formatPrice(item.price)}</p>
+                      </div>
+
+                      {/* Quantity Controls */}
+                      <div className="cart-item-quantity">
+                        <label>Jumlah</label>
+                        <div className="quantity-controls-mini">
+                          <button 
+                            onClick={() => handleQuantityChange(i, -1)}
+                            className="qty-btn-mini"
+                            disabled={item.qty <= 1}
+                          >
+                            −
+                          </button>
+                          <span className="qty-display">{item.qty || 1}</span>
+                          <button 
+                            onClick={() => handleQuantityChange(i, 1)}
+                            className="qty-btn-mini"
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Subtotal */}
+                      <div className="cart-item-subtotal">
+                        <label>Subtotal</label>
+                        <p className="subtotal-price">
+                          {formatPrice(item.price * (item.qty || 1))}
+                        </p>
+                      </div>
+
+                      {/* Remove Button */}
+                      <button
+                        onClick={() => handleRemoveItem(i)}
+                        className="btn-remove-item"
+                        title="Hapus item"
+                      >
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                          <path d="M6 6l8 8M14 6l-8 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                        </svg>
+                      </button>
+
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Order Summary */}
+              <div className="order-summary">
+                <h2 className="summary-title">Ringkasan Pesanan</h2>
                 
-                {/* PRODUK: gambar + nama + warna */}
-                <td className="border px-3 py-1 flex items-center gap-3">
-
-                  <img 
-                    src={item.displayImage || "/no-image.png"}
-                    className="w-16 h-16 object-cover rounded"
-                  />
-
-                  <div>
-                    <div className="font-semibold">{item.name}</div>
-                    {item.color && (
-                      <div className="text-sm text-gray-600">Warna: {item.color}</div>
-                    )}
+                <div className="summary-details">
+                  <div className="summary-row">
+                    <span>Subtotal ({cart.length} item)</span>
+                    <span>{formatPrice(subtotal)}</span>
+                  </div>
+                  
+                  <div className="summary-row">
+                    <span>PPN (11%)</span>
+                    <span>{formatPrice(tax)}</span>
                   </div>
 
-                </td>
+                  <div className="summary-divider"></div>
 
-                <td className="border px-3 py-1">
-                  Rp{(item.price * (item.quantity || 1)).toLocaleString()}
-                </td>
+                  <div className="summary-row total-row">
+                    <span>Total</span>
+                    <span className="total-amount">{formatPrice(total)}</span>
+                  </div>
+                </div>
 
-                <td className="border px-3 py-1">
-                  <button onClick={() => handleQuantityChange(i, -1)} className="px-2">−</button>
-                  {item.quantity || 1}
-                  <button onClick={() => handleQuantityChange(i, 1)} className="px-2">+</button>
-                </td>
+                <button
+                  onClick={() => router.push("/payment")}
+                  className="btn-checkout"
+                >
+                  Lanjut ke Pembayaran
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M7 4l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
 
-                <td className="border px-3 py-1">
-                  <button
-                    onClick={() => handleRemoveItem(i)}
-                    className="text-red-600 hover:underline"
-                  >
-                    Hapus
-                  </button>
-                </td>
+                <div className="security-badges">
+                  <div className="badge-item">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path d="M10 2L3 6v5c0 4.5 3 8 7 9 4-1 7-4.5 7-9V6l-7-4z" stroke="#4ade80" strokeWidth="2" fill="none"/>
+                      <path d="M7 10l2 2 4-4" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    <span>Pembayaran Aman</span>
+                  </div>
+                  <div className="badge-item">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path d="M3 8h14M3 12h14M7 4h6a2 2 0 012 2v8a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2z" stroke="#4ade80" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                    <span>Garansi 100%</span>
+                  </div>
+                </div>
 
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+              </div>
 
-      <h2 className="font-semibold text-lg mb-3">
-        Total: Rp{total.toLocaleString()}
-      </h2>
+            </div>
+          )}
+        </div>
+      </section>
 
-      {cart.length > 0 && (
-        <button
-          onClick={() => router.push("/payment")}
-          className="bg-green-600 text-white w-full py-3 rounded hover:bg-green-700"
-        >
-          Lanjut ke Pembayaran 💳
-        </button>
-      )}
-    </div>
+      {/* Footer */}
+      <footer className="footer">
+        <div className="container">
+          <div className="footer-content">
+            <div className="footer-section">
+              <h3>ANTARAYA</h3>
+              <p>Premium audio equipment untuk pengalaman mendengar terbaik Anda.</p>
+            </div>
+            <div className="footer-section">
+              <h4>Kontak</h4>
+              <p>Email: info@antaraya.id</p>
+              <p>Phone: +62 xxx xxxx xxxx</p>
+            </div>
+            <div className="footer-section">
+              <h4>Follow Us</h4>
+              <div className="social-links">
+                <a href="#" className="social-link">Instagram</a>
+                <a href="#" className="social-link">Facebook</a>
+                <a href="#" className="social-link">Twitter</a>
+              </div>
+            </div>
+          </div>
+          <div className="footer-bottom">
+            <p>© 2024 Antaraya. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+          </div>
   );
 }
+      
