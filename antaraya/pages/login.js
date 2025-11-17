@@ -5,94 +5,105 @@ import { useRouter } from "next/router";
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [msg, setMsg] = useState("");
+  const [msgType, setMsgType] = useState(""); // success, error, info
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setMsg("");
 
     try {
       await axios.post("/api/auth/login", form);
 
-      setMsg("Login success! Redirecting...");
-      setTimeout(() => router.push("/admin"), 1200); // ⬅ redirect updated
+      setMsgType("success");
+      setMsg("Login berhasil! Mengalihkan...");
+      setTimeout(() => router.push("/admin"), 1200);
     } catch (err) {
-      setMsg(err.response?.data?.error || "Login failed");
+      setMsgType("error");
+      setMsg(err.response?.data?.error || "Login gagal. Silakan coba lagi.");
+      setLoading(false);
     }
   };
 
   return (
-    <div style={container}>
-      <h1>Admin Login</h1>
+    <div className="auth-page">
+      <div className="auth-container">
+        {/* Brand/Logo */}
+        <div className="auth-brand">
+          <h1>ANTARAYA</h1>
+          <p>Admin Login</p>
+        </div>
 
-      <form onSubmit={handleSubmit} style={formStyle}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-          style={input}
-          required
-        />
+        {/* Login Form */}
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="form-group">
+            <label className="form-label">Email</label>
+            <input
+              type="email"
+              placeholder="admin@example.com"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              className="form-input"
+              required
+              disabled={loading}
+            />
+          </div>
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-          style={input}
-          required
-        />
+          <div className="form-group">
+            <label className="form-label">Password</label>
+            <input
+              type="password"
+              placeholder="••••••••"
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              className="form-input"
+              required
+              disabled={loading}
+            />
+          </div>
 
-        <button style={button}>Login</button>
-      </form>
+          <button 
+            type="submit" 
+            className={`btn-submit ${loading ? 'btn-loading' : ''}`}
+            disabled={loading}
+          >
+            {loading ? 'Logging in...' : 'Login'}
+          </button>
+        </form>
 
-      <div style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 10 }}>
-        <button style={linkBtn} onClick={() => router.push("/register")}>
-          Register Admin
-        </button>
+        {/* Message */}
+        {msg && (
+          <div className={`auth-message ${msgType}`}>
+            {msg}
+          </div>
+        )}
 
-        <button style={linkBtn} onClick={() => router.push("/forgot-password")}>
-          Forgot Password?
-        </button>
+        {/* Secondary Actions */}
+        <div className="auth-links">
+          <button 
+            className="btn-link" 
+            onClick={() => router.push("/register")}
+            disabled={loading}
+          >
+            Daftar Admin Baru
+          </button>
+
+          <button 
+            className="btn-link" 
+            onClick={() => router.push("/forgot-password")}
+            disabled={loading}
+          >
+            Lupa Password?
+          </button>
+        </div>
+
+        {/* Back to Home */}
+        <div className="back-link">
+          <a href="/">← Kembali ke Beranda</a>
+        </div>
       </div>
-
-      <p style={{ marginTop: 20 }}>{msg}</p>
     </div>
   );
 }
-
-// ===== Styles =====
-const container = {
-  maxWidth: "400px",
-  margin: "60px auto",
-  padding: "30px",
-  borderRadius: "10px",
-  border: "1px solid #ddd",
-};
-
-const formStyle = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "10px",
-};
-
-const input = {
-  padding: "10px",
-  borderRadius: "6px",
-  border: "1px solid #ccc",
-};
-
-const button = {
-  padding: "12px",
-  background: "#0070f3",
-  color: "white",
-  borderRadius: "8px",
-  cursor: "pointer",
-};
-
-const linkBtn = {
-  padding: "10px",
-  background: "#eaeaea",
-  borderRadius: "6px",
-  cursor: "pointer",
-};

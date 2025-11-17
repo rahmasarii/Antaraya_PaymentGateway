@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 export default function ProductsPage() {
+  const router = useRouter();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -10,15 +12,24 @@ export default function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [currentPage, setCurrentPage] = useState(1);
+  const [cartItemCount, setCartItemCount] = useState(0);
   const productsPerPage = 8;
 
   useEffect(() => {
     fetchProducts();
+    updateCartCount();
   }, []);
 
   useEffect(() => {
     filterProducts();
   }, [products, searchQuery, statusFilter]);
+
+  // Update cart count from localStorage
+  const updateCartCount = () => {
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const totalItems = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
+    setCartItemCount(totalItems);
+  };
 
   const fetchProducts = async () => {
     try {
@@ -68,6 +79,10 @@ export default function ProductsPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const goToCart = () => {
+    router.push('/checkout');
+  };
+
   return (
     <div className="main-container">
       {/* Navbar */}
@@ -75,6 +90,28 @@ export default function ProductsPage() {
         <div className="navbar-container">
           <div className="navbar-logo">
             <h1>ANTARAYA</h1>
+          </div>
+          
+          {/* Cart Icon */}
+          <div className="navbar-cart" onClick={goToCart}>
+            <svg 
+              width="28" 
+              height="28" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+              className="cart-icon"
+            >
+              <circle cx="9" cy="21" r="1"/>
+              <circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            {cartItemCount > 0 && (
+              <span className="cart-badge">{cartItemCount}</span>
+            )}
           </div>
         </div>
       </nav>
@@ -219,17 +256,20 @@ export default function ProductsPage() {
               <p>Premium audio equipment untuk pengalaman mendengar terbaik Anda.</p>
             </div>
             <div className="footer-section">
-              <h4>Kontak</h4>
-              <p>Email: info@antaraya.id</p>
-              <p>Phone: +62 xxx xxxx xxxx</p>
-            </div>
-            <div className="footer-section">
               <h4>Follow Us</h4>
               <div className="social-links">
-                <a href="#" className="social-link">Instagram</a>
-                <a href="#" className="social-link">Facebook</a>
-                <a href="#" className="social-link">Twitter</a>
+                <a href="https://www.instagram.com/pt.antarayapersada/" className="social-link">Instagram</a>
+                <a href="https://shopee.co.id/antarayapersada" className="social-link">Shopee</a>
+                <a href="https://www.tokopedia.com/antaraya-1" className="social-link">Tokopedia</a>
               </div>
+            </div>
+            <div className="footer-section">
+              <h4>Hubungi Kami</h4>
+              <p>Gading Serpong, +62 812-9613-5571</p>
+              <p>Jakarta Barat, +62 813-1898-3498</p>
+             <br></br>
+              <p>Senin-Jumat: 8.00 am - 17.30 pm</p>
+              <p>Sabtu: 8.00 am - 13.00 pm</p>
             </div>
           </div>
           <div className="footer-bottom">

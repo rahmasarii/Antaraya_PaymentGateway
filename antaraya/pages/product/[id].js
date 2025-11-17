@@ -341,17 +341,20 @@ export default function ProductDetail() {
               <p>Premium audio equipment untuk pengalaman mendengar terbaik Anda.</p>
             </div>
             <div className="footer-section">
-              <h4>Kontak</h4>
-              <p>Email: info@antaraya.id</p>
-              <p>Phone: +62 xxx xxxx xxxx</p>
-            </div>
-            <div className="footer-section">
               <h4>Follow Us</h4>
               <div className="social-links">
-                <a href="#" className="social-link">Instagram</a>
-                <a href="#" className="social-link">Facebook</a>
-                <a href="#" className="social-link">Twitter</a>
+                <a href="https://www.instagram.com/pt.antarayapersada/" className="social-link">Instagram</a>
+                <a href="https://shopee.co.id/antarayapersada" className="social-link">Shopee</a>
+                <a href="https://www.tokopedia.com/antaraya-1" className="social-link">Tokopedia</a>
               </div>
+            </div>
+            <div className="footer-section">
+              <h4>Hubungi Kami</h4>
+              <p>Gading Serpong, +62 812-9613-5571</p>
+              <p>Jakarta Barat, +62 813-1898-3498</p>
+             <br></br>
+              <p>Senin-Jumat: 8.00 am - 17.30 pm</p>
+              <p>Sabtu: 8.00 am - 13.00 pm</p>
             </div>
           </div>
           <div className="footer-bottom">
