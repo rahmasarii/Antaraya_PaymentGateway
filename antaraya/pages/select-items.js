@@ -103,6 +103,14 @@ export default function SelectItems() {
         ))}
       </div>
 
+      <button
+  onClick={() => window.open("https://wa.me/6281296135571", "_blank")}
+  className="contact-us-btn"
+>
+  Contact Us
+</button>
+
+
      
         
      
