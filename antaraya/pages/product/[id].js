@@ -63,9 +63,13 @@ export default function ProductDetail() {
       <div className="main-container">
         <nav className="navbar">
           <div className="navbar-container">
-            <div className="navbar-logo">
-              <h1>ANTARAYA</h1>
-            </div>
+<div className="navbar-logo">
+  <img 
+    src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/2c7a0a58-e2d7-4e3b-99cb-7187e398953d/Logo+Putih+Transparent+Antaraya+Original.png?format=1500w" 
+    alt="Antaraya Logo"
+    onClick={() => router.push('/')}
+  />
+</div>
           </div>
         </nav>
         <div className="error-container" style={{ padding: '3rem', textAlign: 'center' }}>
@@ -164,16 +168,20 @@ export default function ProductDetail() {
       {/* Navbar */}
       <nav className="navbar">
         <div className="navbar-container">
-          <div className="navbar-logo">
-            <h1 style={{ cursor: 'pointer' }} onClick={() => router.push('/')}>ANTARAYA</h1>
-          </div>
+      <div className="navbar-logo">
+  <img 
+    src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/2c7a0a58-e2d7-4e3b-99cb-7187e398953d/Logo+Putih+Transparent+Antaraya+Original.png?format=1500w" 
+    alt="Antaraya Logo"
+    onClick={() => router.push('/')}
+  />
+</div>
           <div className="navbar-menu">
             <button 
               onClick={() => router.push('/')} 
               className="nav-link"
               style={{ background: 'none', border: 'none', cursor: 'pointer' }}
             >
-              ← Kembali
+              Kembali
             </button>
           </div>
         </div>

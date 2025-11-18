@@ -1,86 +1,42 @@
 import { useState, useEffect } from 'react';
-import ProductCard from '../components/ProductCard';
-import axios from 'axios';
 import { useRouter } from 'next/router';
 
-export default function ProductsPage() {
+export default function HomePage() {
   const router = useRouter();
-  const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [featuredProducts, setFeaturedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState('ALL');
-  const [currentPage, setCurrentPage] = useState(1);
   const [cartItemCount, setCartItemCount] = useState(0);
-  const productsPerPage = 8;
 
   useEffect(() => {
-    fetchProducts();
+    fetchFeaturedProducts();
     updateCartCount();
   }, []);
 
-  useEffect(() => {
-    filterProducts();
-  }, [products, searchQuery, statusFilter]);
-
-  // Update cart count from localStorage
   const updateCartCount = () => {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
     const totalItems = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
     setCartItemCount(totalItems);
   };
 
-  const fetchProducts = async () => {
+  const fetchFeaturedProducts = async () => {
     try {
-      setLoading(true);
-      setError(null);
-      
-      // Fetch dari API MongoDB
-      const response = await axios.get('/api/products');
-      setProducts(response.data);
-      
+      const response = await fetch('/api/products');
+      const data = await response.json();
+      // Ambil 4 produk pertama untuk featured
+      setFeaturedProducts(data.slice(0, 4));
     } catch (error) {
       console.error('Error fetching products:', error);
-      setError('Gagal memuat produk. Silakan coba lagi.');
     } finally {
       setLoading(false);
     }
   };
 
-  const filterProducts = () => {
-    let filtered = [...products];
-
-    // Filter berdasarkan search query
-    if (searchQuery) {
-      filtered = filtered.filter(product =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.description?.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    // Filter berdasarkan status
-    if (statusFilter !== 'ALL') {
-      filtered = filtered.filter(product => product.status === statusFilter);
-    }
-
-    setFilteredProducts(filtered);
-    setCurrentPage(1);
-  };
-
-  // Pagination logic
-  const indexOfLastProduct = currentPage * productsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
-  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
-
-  const paginate = (pageNumber) => {
-    setCurrentPage(pageNumber);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const goToCart = () => {
-    router.push('/checkout');
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+    }).format(price);
   };
 
   return (
@@ -89,11 +45,24 @@ export default function ProductsPage() {
       <nav className="navbar">
         <div className="navbar-container">
           <div className="navbar-logo">
-            <h1>ANTARAYA</h1>
+            <img 
+              src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/2c7a0a58-e2d7-4e3b-99cb-7187e398953d/Logo+Putih+Transparent+Antaraya+Original.png?format=1500w" 
+              alt="Antaraya Logo"
+              onClick={() => router.push('/')}
+            />
           </div>
-          
-          {/* Cart Icon */}
-          <div className="navbar-cart" onClick={goToCart}>
+          <div className="navbar-menu">
+            <button onClick={() => router.push('/')} className="nav-link active">
+              Home
+            </button>
+            <button onClick={() => router.push('/shop')} className="nav-link">
+              Shop
+            </button>
+            <button onClick={() => router.push('/about')} className="nav-link">
+              About
+            </button>
+          </div>
+          <div className="navbar-cart" onClick={() => router.push('/checkout')}>
             <svg 
               width="28" 
               height="28" 
@@ -117,131 +86,136 @@ export default function ProductsPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="hero-section">
-        <div className="hero-content">
-          <h1 className="hero-title">Premium Audio Collection</h1>
-          <p className="hero-subtitle">Experience the finest sound quality</p>
+      <section 
+        className="hero-section-home"
+        style={{
+          backgroundImage: 'url(https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/4aeceed3-c6b0-40d1-8234-6ec082d974c9/openart-image_SvCkyGSD_1753133761178_raw+%281%29.jpg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          minHeight: '90vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'relative'
+        }}
+      >
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.4)'
+        }} />
+        
+        <div className="hero-content" style={{ position: 'relative', zIndex: 1, textAlign: 'center', color: 'white' }}>
+          <h1 style={{ 
+            fontSize: '4rem', 
+            fontWeight: '800', 
+            marginBottom: '1.5rem',
+            letterSpacing: '-1px',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
+          }}>
+            Discover The Full Detail Of Your Music
+          </h1>
+          <p style={{ 
+            fontSize: '1.75rem', 
+            fontWeight: '300', 
+            marginBottom: '2rem',
+            textShadow: '1px 1px 2px rgba(0,0,0,0.3)'
+          }}>
+            With Our Signature Euphoria Sound Technology
+          </p>
+          <button
+            onClick={() => router.push('/shop')}
+            style={{
+              padding: '1rem 3rem',
+              fontSize: '1.1rem',
+              fontWeight: '600',
+              color: 'white',
+              backgroundColor: 'transparent',
+              border: '2px solid white',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              textTransform: 'uppercase',
+              letterSpacing: '1px'
+            }}
+            onMouseOver={(e) => {
+              e.target.style.backgroundColor = 'white';
+              e.target.style.color = '#1a1a1a';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.backgroundColor = 'transparent';
+              e.target.style.color = 'white';
+            }}
+          >
+            LEARN MORE
+          </button>
         </div>
       </section>
 
-      {/* Filter Section */}
-      <section className="filter-section">
+      {/* Featured Products Section */}
+      <section className="featured-products-section">
         <div className="container">
-          <div className="filter-container">
-            {/* Search Input */}
-            <div className="search-wrapper">
-              <input
-                type="text"
-                placeholder="Cari produk..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="search-input"
-              />
-              <svg className="search-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
-            </div>
-
-            {/* Status Filter */}
-            <div className="status-filter">
-              <button
-                className={`filter-btn ${statusFilter === 'ALL' ? 'active' : ''}`}
-                onClick={() => setStatusFilter('ALL')}
-              >
-                Semua
-              </button>
-              <button
-                className={`filter-btn ${statusFilter === 'READY' ? 'active' : ''}`}
-                onClick={() => setStatusFilter('READY')}
-              >
-                Ready Stock
-              </button>
-              <button
-                className={`filter-btn ${statusFilter === 'HABIS' ? 'active' : ''}`}
-                onClick={() => setStatusFilter('HABIS')}
-              >
-                Habis
-              </button>
-            </div>
-
-            {/* Results Count */}
-            <div className="results-count">
-              Menampilkan {filteredProducts.length} produk
-            </div>
+          <div className="section-header">
+            <h2 className="section-title">Produk Terbaru</h2>
+            <button
+              onClick={() => router.push('/shop')}
+              className="btn-view-all"
+            >
+              SEMUA PRODUK
+            </button>
           </div>
-        </div>
-      </section>
 
-      {/* Products Section */}
-      <section className="products-section">
-        <div className="container">
-          {/* Error State */}
-          {error && (
-            <div className="error-container">
-              <p className="error-message">{error}</p>
-              <button onClick={fetchProducts} className="retry-btn">
-                Coba Lagi
-              </button>
-            </div>
-          )}
-
-          {/* Loading State */}
           {loading ? (
             <div className="loading-container">
               <div className="loading-spinner"></div>
               <p>Memuat produk...</p>
             </div>
-          ) : currentProducts.length > 0 ? (
-            <>
-              {/* Products Grid */}
-              <div className="products-grid">
-                {currentProducts.map((product) => (
-                  <ProductCard key={product._id} product={product} />
-                ))}
-              </div>
-
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <div className="pagination">
-                  <button
-                    className="pagination-btn"
-                    onClick={() => paginate(currentPage - 1)}
-                    disabled={currentPage === 1}
-                  >
-                    ← Prev
-                  </button>
-                  
-                  <div className="pagination-numbers">
-                    {[...Array(totalPages)].map((_, index) => (
-                      <button
-                        key={index + 1}
-                        className={`pagination-number ${currentPage === index + 1 ? 'active' : ''}`}
-                        onClick={() => paginate(index + 1)}
-                      >
-                        {index + 1}
-                      </button>
-                    ))}
-                  </div>
-
-                  <button
-                    className="pagination-btn"
-                    onClick={() => paginate(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                  >
-                    Next →
-                  </button>
-                </div>
-              )}
-            </>
           ) : (
-            /* Empty State */
-            <div className="empty-state">
-              <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
-                <circle cx="50" cy="50" r="40" stroke="#E5E7EB" strokeWidth="2"/>
-                <path d="M35 45h30M35 55h20" stroke="#E5E7EB" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
-              <h3>Produk tidak ditemukan</h3>
-              <p>Coba ubah filter atau kata kunci pencarian</p>
+            <div className="products-grid">
+              {featuredProducts.map((product) => (
+                <div
+                  key={product._id}
+                  className="product-card"
+                  onClick={() => router.push(`/product/${product._id}`)}
+                >
+                  <div className="product-image-wrapper">
+                    <img
+                      src={product.displayImage || '/no-image.png'}
+                      alt={product.name}
+                      className="product-image"
+                    />
+                    {product.status === 'HABIS' && (
+                      <div className="status-badge out-of-stock">HABIS</div>
+                    )}
+                    <div className="product-overlay">
+                      <button className="btn-view-detail">Lihat Detail</button>
+                    </div>
+                  </div>
+                  <div className="product-info">
+                    <h3 className="product-name">{product.name}</h3>
+                    <p className="product-price">{formatPrice(product.price)}</p>
+                    {product.colors && product.colors.length > 0 && (
+                      <div className="color-variants">
+                        {product.colors.slice(0, 4).map((color, idx) => (
+                          <div
+                            key={idx}
+                            className="color-dot"
+                            style={{ backgroundColor: color.colorName.toLowerCase() }}
+                            title={color.colorName}
+                          />
+                        ))}
+                        {product.colors.length > 4 && (
+                          <span className="color-more">+{product.colors.length - 4}</span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>
@@ -267,7 +241,7 @@ export default function ProductsPage() {
               <h4>Hubungi Kami</h4>
               <p>Gading Serpong, +62 812-9613-5571</p>
               <p>Jakarta Barat, +62 813-1898-3498</p>
-             <br></br>
+              <br />
               <p>Senin-Jumat: 8.00 am - 17.30 pm</p>
               <p>Sabtu: 8.00 am - 13.00 pm</p>
             </div>

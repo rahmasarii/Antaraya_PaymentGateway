@@ -1,6 +1,10 @@
 import { useEffect } from "react";
 import axios from "axios";
-import "../styles/products.css"; 
+import '../styles/global.css'; 
+import '../styles/home.css';
+import '../styles/shop.css';
+import '../styles/about.css';
+import '../styles/product-detail.css';
 import '../styles/checkout.css';
 import '../styles/auth.css';
 
