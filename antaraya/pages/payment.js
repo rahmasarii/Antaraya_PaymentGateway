@@ -47,11 +47,13 @@ export default function Payment() {
       });
 
       const { token } = res.data;
+                localStorage.removeItem("cart"); // hapus cart setelah bayar
+
       window.snap.pay(token, {
         onSuccess: function (result) {
           alert("Pembayaran berhasil!");
           console.log(result);
-          localStorage.removeItem("cart"); // hapus cart setelah bayar
+          // localStorage.removeItem("cart"); // hapus cart setelah bayar
           router.push("/checkout");
         },
         onPending: function (result) {
