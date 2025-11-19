@@ -1,10 +1,19 @@
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 
-
 export default function AboutPage() {
   const router = useRouter();
   const [cartItemCount, setCartItemCount] = useState(0);
+  
+  // Contact form state
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    subscribe: false,
+    message: "",
+  });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     updateCartCount();
@@ -16,18 +25,49 @@ export default function AboutPage() {
     setCartItemCount(totalItems);
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const res = await fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
+
+    const data = await res.json();
+    setLoading(false);
+
+    if (res.ok) {
+      alert("Your message has been sent! We'll get back to you soon 😊");
+
+      // Reset form state
+      setForm({
+        firstName: "",
+        lastName: "",
+        email: "",
+        subscribe: false,
+        message: "",
+      });
+
+      e.target.reset();
+    } else {
+      alert("Failed to send message. Please try again.");
+    }
+  };
+
   return (
     <div className="main-container">
       {/* Navbar */}
       <nav className="navbar">
         <div className="navbar-container">
           <div className="navbar-logo">
-  <img 
-    src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/2c7a0a58-e2d7-4e3b-99cb-7187e398953d/Logo+Putih+Transparent+Antaraya+Original.png?format=1500w" 
-    alt="Antaraya Logo"
-    onClick={() => router.push('/')}
-  />
-</div>
+            <img 
+              src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/2c7a0a58-e2d7-4e3b-99cb-7187e398953d/Logo+Putih+Transparent+Antaraya+Original.png?format=1500w" 
+              alt="Antaraya Logo"
+              onClick={() => router.push('/')}
+            />
+          </div>
           <div className="navbar-menu">
             <button onClick={() => router.push('/')} className="nav-link">
               Home
@@ -55,88 +95,140 @@ export default function AboutPage() {
               <circle cx="20" cy="21" r="1"/>
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
             </svg>
+            {cartItemCount > 0 && (
+              <span className="cart-badge">{cartItemCount}</span>
+            )}
           </div>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="hero-section">
-        <div className="hero-content">
-          <h1 className="hero-title">About Antaraya</h1>
-          <p className="hero-subtitle">Premium Audio Equipment Distributor</p>
-        </div>
-      </section>
-
       {/* About Content */}
       <section className="about-content-section">
         <div className="container">
-          <div className="about-content-wrapper">
-            {/* Company Story */}
-            <div className="about-text-section">
-              <h2>Tentang Kami</h2>
-              <p>
-                PT Antaraya Persada adalah distributor resmi peralatan audio premium yang berkomitmen untuk menghadirkan pengalaman mendengar terbaik bagi para audiophile di Indonesia. Kami menyediakan berbagai produk audio berkualitas tinggi dari brand-brand terkemuka dunia.
-              </p>
-              <p>
-                Dengan pengalaman bertahun-tahun di industri audio, kami memahami kebutuhan setiap pelanggan dan selalu berusaha memberikan produk terbaik dengan layanan yang memuaskan.
-              </p>
-            </div>
-
-            {/* Vision & Mission */}
-            <div className="vision-mission-grid">
-              <div className="vision-mission-card">
-                <h3>Visi Kami</h3>
+          {/* Siapakah Kami Section */}
+          <div className="who-we-are-section">
+            <div className="who-we-are-content">
+              <div className="who-we-are-text">
+                <h2>Siapakah kami ?</h2>
                 <p>
-                  Menjadi distributor audio terdepan di Indonesia yang dikenal dengan kualitas produk premium dan pelayanan terbaik untuk para pecinta audio sejati.
+                  Kami hanyalah sebuah perusahaan rintisan kecil yang memiliki <strong>visi</strong> untuk membantu dan meningkatkan gaya hidup masyarakat Indonesia tanpa harus mengeluarkan biaya yang besar. Kami juga berharap dapat memperluas dan meningkatkan gaya hidup banyak orang di seluruh dunia. Kami lahir dari seorang pemuda yang menginginkan masyarakat kelas menengah ke bawah untuk menikmati produk berkualitas seperti halnya mereka yang berada di kelas menengah ke atas. Maka, pemuda tersebut mulai membangun perusahaan kecil untuk mewujudkan mimpinya, dan perusahaan itu bernama <strong>Antaraya</strong>. Di sini, Anda akan mengikuti langkah-langkahnya selama bertahun-tahun mendatang.
+                </p>
+                <p>
+                  <strong>Misi</strong> kami adalah menyediakan dan mendistribusikan produk-produk berkualitas di seluruh pasar Indonesia dan memberikan akses bagi masyarakat kelas menengah ke bawah untuk menikmati produk-produk berkualitas tinggi tanpa mengeluarkan biaya yang mahal. Kami memastikan bahwa produk kami memiliki nilai kualitas yang lebih tinggi dari harga yang kami tetapkan. Kami juga bertujuan untuk memberikan layanan terbaik untuk memaksimalkan pengalaman konsumen kami, mulai dari sebelum penjualan hingga setelah penjualan.
                 </p>
               </div>
-
-              <div className="vision-mission-card">
-                <h3>Misi Kami</h3>
-                <p>
-                  Menyediakan produk audio berkualitas tinggi dengan harga kompetitif dan memberikan pengalaman berbelanja yang menyenangkan bagi setiap pelanggan.
-                </p>
+              <div className="who-we-are-image">
+                <img 
+                  src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/0a948f4d-f7c6-4e01-82dd-fd0bcd796c63/Picture+1.jpg?format=2500w"
+                  alt="Antaraya Audio Experience"
+                />
               </div>
             </div>
+          </div>
 
-            {/* Why Choose Us */}
-            <div className="why-choose-section">
-              <h2>Mengapa Memilih Antaraya?</h2>
-              
-              <div className="features-grid">
-                <div className="feature-item">
-                  <div className="feature-icon">
-                    <span>✓</span>
-                  </div>
-                  <h3>Produk Original</h3>
-                  <p>100% produk original dengan garansi resmi dari distributor</p>
-                </div>
-
-                <div className="feature-item">
-                  <div className="feature-icon">
-                    <span>💎</span>
-                  </div>
-                  <h3>Kualitas Premium</h3>
-                  <p>Hanya menjual produk audio berkualitas tinggi dari brand terpercaya</p>
-                </div>
-
-                <div className="feature-item">
-                  <div className="feature-icon">
-                    <span>🚚</span>
-                  </div>
-                  <h3>Pengiriman Cepat</h3>
-                  <p>Pengiriman cepat dan aman ke seluruh Indonesia</p>
-                </div>
-
-                <div className="feature-item">
-                  <div className="feature-icon">
-                    <span>🎧</span>
-                  </div>
-                  <h3>Konsultasi Gratis</h3>
-                  <p>Tim ahli kami siap membantu memilih produk yang sesuai</p>
-                </div>
+          {/* Founder Section */}
+          <div className="founder-section">
+            <div className="founder-content">
+              <div className="founder-image">
+                <img 
+                  src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/d473536d-228c-48c3-b249-c3aa7a5d7495/Picture+0+Thicc.jpg?format=2500w"
+                  alt="Steve Yang - Founder & CEO"
+                />
               </div>
-            </div>    
+              <div className="founder-text">
+                <div className="founder-info">
+                  <p className="founder-name">Steve Yang</p>
+                  <p className="founder-title">Antaraya Persada Founder & CEO</p>
+                </div>
+                <blockquote className="founder-quote">
+                  It all begins with an idea. Maybe you want to launch a business. Maybe you want to turn a hobby into something more. Whatever it is, make sure your idea helps other people needs.
+                </blockquote>
+              </div>
+            </div>
+          </div>
+
+          {/* Contact Form Section */}
+          <div className="contact-form-section">
+            <div className="contact-form-header">
+              <h2>Hubungi Kami</h2>
+              <p>Apakah anda tertarik untuk bekerja sama ? Isi form sebelah ini dan kami akan menghubungi anda secepatnya. Kami tidak sabar untuk mendengar dari anda!</p>
+            </div>
+            <div className="contact-form-wrapper">
+              <form onSubmit={handleSubmit} className="contact-form">
+                <div className="form-row">
+                  <div className="form-group">
+                    <label htmlFor="firstName">First Name *</label>
+                    <input
+                      id="firstName"
+                      type="text"
+                      required
+                      value={form.firstName}
+                      onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+                      placeholder="Masukkan nama depan"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="lastName">Last Name</label>
+                    <input
+                      id="lastName"
+                      type="text"
+                      value={form.lastName}
+                      onChange={(e) => setForm({ ...form, lastName: e.target.value })}
+                      placeholder="Masukkan nama belakang"
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="email">Email *</label>
+                  <input
+                    id="email"
+                    type="email"
+                    required
+                    value={form.email}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    placeholder="nama@example.com"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="message">Message *</label>
+                  <textarea
+                    id="message"
+                    required
+                    rows="6"
+                    value={form.message}
+                    onChange={(e) => setForm({ ...form, message: e.target.value })}
+                    placeholder="Tulis pesan Anda di sini..."
+                  ></textarea>
+                </div>
+
+                <div className="form-group-checkbox">
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={form.subscribe}
+                      onChange={(e) =>
+                        setForm({ ...form, subscribe: e.target.checked })
+                      }
+                    />
+                    <span>Sign up for news and updates</span>
+                  </label>
+                </div>
+
+                <button type="submit" className="submit-button" disabled={loading}>
+                  {loading ? (
+                    <>
+                      <span className="button-spinner"></span>
+                      Sending...
+                    </>
+                  ) : (
+                    'SUBMIT'
+                  )}
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </section>
@@ -144,9 +236,38 @@ export default function AboutPage() {
       {/* Footer */}
       <footer className="footer">
         <div className="container">
+          {/* Brand Logos Section */}
+          <div className="footer-brands">
+            <div className="brand-logo-item">
+              <img 
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/b06286ba-ff07-4798-b70d-548e404c6c24/Long+normal+26x7.5.png?format=750w"
+                alt="Antaraya"
+              />
+            </div>
+            <div className="brand-logo-item">
+              <img 
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/4fa552a3-b070-4147-b2ef-39317c0384d1/Jive+Transparent+black.png?format=500w"
+                alt="Jive Audio"
+              />
+            </div>
+            <div className="brand-logo-item">
+              <img 
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/b8cb54c1-ba98-40f4-b13c-c338b416739e/Alluve+long+inv+bg.png?format=750w"
+                alt="Alluve"
+              />
+            </div>
+            <div className="brand-logo-item">
+              <img 
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/19be8492-2927-49bd-9923-d8b605f00c0d/SINGLE+BEAN+Transparent.png?format=500w"
+                alt="Single Bean"
+              />
+            </div>
+          </div>
+
+          <div className="footer-divider"></div>
+
           <div className="footer-content">
-            <div className="footer-section">
-              <h3>ANTARAYA</h3>
+            <div className="footer-section">  
               <p>Premium audio equipment untuk pengalaman mendengar terbaik Anda.</p>
             </div>
             <div className="footer-section">

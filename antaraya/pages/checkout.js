@@ -257,9 +257,38 @@ export default function Checkout() {
       {/* Footer */}
       <footer className="footer">
         <div className="container">
+          {/* Brand Logos Section */}
+          <div className="footer-brands">
+            <div className="brand-logo-item">
+              <img 
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/b06286ba-ff07-4798-b70d-548e404c6c24/Long+normal+26x7.5.png?format=750w"
+                alt="Antaraya"
+              />
+            </div>
+            <div className="brand-logo-item">
+              <img 
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/4fa552a3-b070-4147-b2ef-39317c0384d1/Jive+Transparent+black.png?format=500w"
+                alt="Jive Audio"
+              />
+            </div>
+            <div className="brand-logo-item">
+              <img 
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/b8cb54c1-ba98-40f4-b13c-c338b416739e/Alluve+long+inv+bg.png?format=750w"
+                alt="Alluve"
+              />
+            </div>
+            <div className="brand-logo-item">
+              <img 
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/19be8492-2927-49bd-9923-d8b605f00c0d/SINGLE+BEAN+Transparent.png?format=500w"
+                alt="Single Bean"
+              />
+            </div>
+          </div>
+
+          <div className="footer-divider"></div>
+
           <div className="footer-content">
-            <div className="footer-section">
-              <h3>ANTARAYA</h3>
+            <div className="footer-section">  
               <p>Premium audio equipment untuk pengalaman mendengar terbaik Anda.</p>
             </div>
             <div className="footer-section">
@@ -274,7 +303,7 @@ export default function Checkout() {
               <h4>Hubungi Kami</h4>
               <p>Gading Serpong, +62 812-9613-5571</p>
               <p>Jakarta Barat, +62 813-1898-3498</p>
-             <br></br>
+              <br />
               <p>Senin-Jumat: 8.00 am - 17.30 pm</p>
               <p>Sabtu: 8.00 am - 13.00 pm</p>
             </div>

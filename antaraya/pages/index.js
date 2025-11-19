@@ -221,12 +221,81 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Shipping Section */}
+      <section className="shipping-section">
+        <div className="container">
+          <div className="shipping-content">
+            <div className="shipping-text">
+              <h2 className="shipping-title">Pilihan Kurir</h2>
+              <p className="shipping-subtitle">
+                Gratis Ongkir Instant <span className="highlight-text">khusus daerah BSD City dan Gading Serpong</span>
+              </p>
+            </div>
+            <div className="courier-logos">
+              <div className="courier-logo-item">
+                <img 
+                  src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/0fc15baf-e243-4e82-98bd-47c1fce3c37d/0+J%26T+Express.png?format=500w"
+                  alt="J&T Express"
+                />
+              </div>
+              <div className="courier-logo-item">
+                <img 
+                  src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/788b542d-bc89-462f-bb47-d2465b0ccfaa/0+JNE+Express.png?format=500w"
+                  alt="JNE Express"
+                />
+              </div>
+              <div className="courier-logo-item">
+                <img 
+                  src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/4b78bf57-295d-4e7b-a137-4565eb47bf59/0+SiCepat+2.png?format=500w"
+                  alt="SiCepat"
+                />
+              </div>
+              <div className="courier-logo-item">
+                <img 
+                  src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/1856b44a-844f-43b4-bcff-708f9520a5a0/0+Gosend+Gojek.png?format=750w"
+                  alt="GoSend"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="footer">
         <div className="container">
+          {/* Brand Logos Section */}
+          <div className="footer-brands">
+            <div className="brand-logo-item">
+              <img 
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/b06286ba-ff07-4798-b70d-548e404c6c24/Long+normal+26x7.5.png?format=750w"
+                alt="Antaraya"
+              />
+            </div>
+            <div className="brand-logo-item">
+              <img 
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/4fa552a3-b070-4147-b2ef-39317c0384d1/Jive+Transparent+black.png?format=500w"
+                alt="Jive Audio"
+              />
+            </div>
+            <div className="brand-logo-item">
+              <img 
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/b8cb54c1-ba98-40f4-b13c-c338b416739e/Alluve+long+inv+bg.png?format=750w"
+                alt="Alluve"
+              />
+            </div>
+            <div className="brand-logo-item">
+              <img 
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/19be8492-2927-49bd-9923-d8b605f00c0d/SINGLE+BEAN+Transparent.png?format=500w"
+                alt="Single Bean"
+              />
+            </div>
+          </div>
+
+          <div className="footer-divider"></div>
+
           <div className="footer-content">
-            <div className="footer-section">
-              <h3>ANTARAYA</h3>
+            <div className="footer-section">  
               <p>Premium audio equipment untuk pengalaman mendengar terbaik Anda.</p>
             </div>
             <div className="footer-section">

@@ -146,11 +146,13 @@
 }
 
 .product-description p {
-  font-size: 1rem;
+  font-size: 0.8rem;
   line-height: 1.8;
   color: #4b5563;
   margin: 0;
+  white-space: pre-line; /* tambahkan ini */
 }
+
 
 /* ===== COLOR SELECTION ===== */
 .color-selection {

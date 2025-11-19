@@ -50,135 +50,280 @@
   padding: 5rem 0;
 }
 
-.about-content-wrapper {
-  max-width: 900px;
+/* Who We Are Section */
+.who-we-are-section {
+  margin-bottom: 6rem;
+}
+
+.who-we-are-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.who-we-are-text h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #1a1a1a;
+}
+
+.who-we-are-text p {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: #4b5563;
+  margin-bottom: 1.5rem;
+}
+
+.who-we-are-text strong {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.who-we-are-image {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.who-we-are-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* Founder Section */
+.founder-section {
+  background-color: #f9fafb;
+  padding: 4rem;
+  border-radius: 12px;
+  margin-bottom: 6rem;
+}
+
+.founder-content {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3rem;
+  align-items: center;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
-.about-text-section {
-  margin-bottom: 4rem;
-}
-
-.about-text-section h2 {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-  color: #1a1a1a;
-}
-
-.about-text-section p {
-  font-size: 1.125rem;
-  line-height: 1.8;
-  color: #4b5563;
-  margin-bottom: 1rem;
-}
-
-/* Vision & Mission Grid */
-.vision-mission-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-bottom: 4rem;
-}
-
-.vision-mission-card {
-  padding: 2rem;
-  background-color: #f9fafb;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
-}
-
-.vision-mission-card h3 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  color: #1a1a1a;
-}
-
-.vision-mission-card p {
-  font-size: 1rem;
-  line-height: 1.8;
-  color: #4b5563;
-}
-
-/* Why Choose Us Section */
-.why-choose-section {
-  margin-bottom: 4rem;
-}
-
-.why-choose-section h2 {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
-  color: #1a1a1a;
-  text-align: center;
-}
-
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-}
-
-.feature-item {
-  text-align: center;
-}
-
-.feature-icon {
-  width: 80px;
-  height: 80px;
-  background-color: #1a1a1a;
+.founder-image {
+  width: 280px;
+  height: 280px;
   border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.founder-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.founder-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.founder-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.founder-name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.founder-title {
+  font-size: 1rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.founder-quote {
+  font-size: 1.75rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: #1a1a1a;
+  margin: 0;
+  font-style: italic;
+}
+
+.founder-quote::before {
+  content: '"';
+}
+
+.founder-quote::after {
+  content: '"';
+}
+
+/* ===== CONTACT FORM SECTION ===== */
+.contact-form-section {
+  background-color: #ffffff;
+  padding: 0rem 0;
+  margin-bottom: 4rem;
+}
+
+.contact-form-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.contact-form-header h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+}
+
+.contact-form-header p {
+  font-size: 1.125rem;
+  color: #6b7280;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.contact-form-wrapper {
+  max-width: 700px;
+  margin: 0 auto;
+  background-color: #f9fafb;
+  padding: 3rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 0.875rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  background-color: #ffffff;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #1a1a1a;
+  box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.1);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #9ca3af;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.form-group-checkbox {
+  display: flex;
+  align-items: center;
+  margin: 0.5rem 0;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #4b5563;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #1a1a1a;
+}
+
+.checkbox-label span {
+  user-select: none;
+}
+
+.submit-button {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 1rem;
-  font-size: 2rem;
+  gap: 0.5rem;
+  margin-top: 1rem;
 }
 
-.feature-item h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: #1a1a1a;
+.submit-button:hover:not(:disabled) {
+  background-color: #333333;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(26, 26, 26, 0.2);
 }
 
-.feature-item p {
-  color: #6b7280;
-  line-height: 1.6;
+.submit-button:active:not(:disabled) {
+  transform: translateY(0);
 }
 
-/* Contact Section */
-.contact-section {
-  background-color: #1a1a1a;
-  color: white;
-  padding: 3rem;
-  border-radius: 12px;
-  text-align: center;
+.submit-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
-.contact-section h2 {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
+.button-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
 }
 
-.contact-section > p {
-  font-size: 1.125rem;
-  margin-bottom: 2rem;
-  opacity: 0.9;
-}
-
-.contact-info-grid {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  flex-wrap: wrap;
-}
-
-.contact-info-item p:first-child {
-  font-weight: 600;
-  margin-bottom: 0.5rem;
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 /* ===== RESPONSIVE STYLES ===== */
@@ -195,37 +340,60 @@
     font-size: 1rem;
   }
 
-  .about-text-section h2 {
-    font-size: 1.75rem;
+  .who-we-are-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
 
-  .about-text-section p {
+  .who-we-are-text h2 {
+    font-size: 2rem;
+  }
+
+  .who-we-are-text p {
     font-size: 1rem;
   }
 
-  .vision-mission-grid {
+  .founder-section {
+    padding: 2rem;
+    margin-bottom: 4rem;
+  }
+
+  .founder-content {
     grid-template-columns: 1fr;
+    gap: 2rem;
+    text-align: center;
   }
 
-  .features-grid {
-    grid-template-columns: 1fr;
+  .founder-image {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
   }
 
-  .why-choose-section h2 {
-    font-size: 1.75rem;
+  .founder-info {
+    align-items: center;
   }
 
-  .contact-section {
+  .founder-quote {
+    font-size: 1.25rem;
+  }
+
+  /* Contact Form Responsive */
+  .contact-form-header h2 {
+    font-size: 2rem;
+  }
+
+  .contact-form-header p {
+    font-size: 1rem;
+  }
+
+  .contact-form-wrapper {
     padding: 2rem;
   }
 
-  .contact-section h2 {
-    font-size: 1.75rem;
-  }
-
-  .contact-info-grid {
-    flex-direction: column;
-    gap: 1rem;
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 }
 
@@ -234,15 +402,37 @@
     font-size: 1.75rem;
   }
 
-  .about-text-section h2 {
+  .who-we-are-text h2 {
     font-size: 1.5rem;
   }
 
-  .why-choose-section h2 {
-    font-size: 1.5rem;
+  .founder-section {
+    padding: 1.5rem;
   }
 
-  .contact-section h2 {
-    font-size: 1.5rem;
+  .founder-image {
+    width: 180px;
+    height: 180px;
+  }
+
+  .founder-quote {
+    font-size: 1.125rem;
+  }
+
+  /* Contact Form Mobile */
+  .contact-form-header h2 {
+    font-size: 1.75rem;
+  }
+
+  .contact-form-wrapper {
+    padding: 1.5rem;
+  }
+
+  .contact-form {
+    gap: 1.25rem;
+  }
+
+  .submit-button {
+    padding: 0.875rem 1.5rem;
   }
 }

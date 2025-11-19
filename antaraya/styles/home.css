@@ -187,12 +187,95 @@
   font-weight: 500;
 }
 
+/* ===== SHIPPING SECTION ===== */
+.shipping-section {
+  padding: 4rem 0;
+  background-color: #ffffff;
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.shipping-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+}
+
+.shipping-text {
+  text-align: center;
+  max-width: 800px;
+}
+
+.shipping-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+}
+
+.shipping-subtitle {
+  font-size: 1.25rem;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.highlight-text {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.courier-logos {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3rem;
+  width: 100%;
+  max-width: 1000px;
+  align-items: center;
+}
+
+.courier-logo-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.courier-logo-item:hover {
+  transform: translateY(-5px);
+}
+
+.courier-logo-item img {
+  max-width: 100%;
+  height: auto;
+  max-height: 60px;
+  object-fit: contain;
+  filter: grayscale(0%);
+  opacity: 0.85;
+  transition: all 0.3s ease;
+}
+
+.courier-logo-item:hover img {
+  opacity: 1;
+  filter: grayscale(0%);
+}
+
+/* ===== FOOTER BRANDS ===== */
+
+
 /* ===== RESPONSIVE STYLES ===== */
 @media (max-width: 1200px) {
   .products-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
   }
+
+  .courier-logos {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+
 }
 
 @media (max-width: 768px) {
@@ -218,6 +301,31 @@
   .product-price {
     font-size: 1.125rem;
   }
+
+  .shipping-section {
+    padding: 3rem 0;
+  }
+
+  .shipping-title {
+    font-size: 2rem;
+  }
+
+  .shipping-subtitle {
+    font-size: 1.125rem;
+  }
+
+  .courier-logos {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .courier-logo-item img {
+    max-height: 50px;
+  }
+
+  .brand-logo-item img {
+    max-height: 40px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -227,5 +335,39 @@
 
   .products-grid {
     grid-template-columns: 1fr;
+  }
+
+  .shipping-content {
+    gap: 2rem;
+  }
+
+  .shipping-title {
+    font-size: 1.75rem;
+  }
+
+  .shipping-subtitle {
+    font-size: 1rem;
+  }
+
+  .courier-logos {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    max-width: 300px;
+  }
+
+  .courier-logo-item {
+    padding: 0.5rem;
+  }
+
+  .courier-logo-item img {
+    max-height: 45px;
+  }
+
+  .brand-logo-item {
+    padding: 0.75rem;
+  }
+
+  .brand-logo-item img {
+    max-height: 35px;
   }
 }
