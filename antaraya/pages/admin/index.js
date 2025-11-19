@@ -1,4 +1,6 @@
 // pages/admin/dashboard.js
+import AdminNavbar from "@/components/AdminNavbar";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -44,17 +46,12 @@ export default function AdminDashboard() {
     window.location.href = "/login";
   };
 
-  const formatDate = (year, month, day) => {
-    return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(
-      2,
-      "0"
-    )}`;
-  };
+  const formatDate = (year, month, day) =>
+    `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 
-  // DAILY CHART
+  // === DAILY CHART ===
   const dailyLabels = daily.map((d) => d._id.date);
   const dailyValues = daily.map((d) => d.totalSales);
-
   const dailyChart = {
     labels: dailyLabels,
     datasets: [
@@ -67,7 +64,7 @@ export default function AdminDashboard() {
     ],
   };
 
-  // WEEKLY CHART
+  // === WEEKLY CHART ===
   const weeklyLabels = weekly.map((w) => {
     const monday = new Date(w._id.year, 0, 1 + (w._id.week - 1) * 7);
     return formatDate(
@@ -78,7 +75,6 @@ export default function AdminDashboard() {
   });
 
   const weeklyValues = weekly.map((w) => w.totalSales);
-
   const weeklyChart = {
     labels: weeklyLabels,
     datasets: [
@@ -91,13 +87,12 @@ export default function AdminDashboard() {
     ],
   };
 
-  // MONTHLY CHART
+  // === MONTHLY CHART ===
   const monthlyLabels = monthly.map((m) =>
     formatDate(m._id.year, m._id.month, 1)
   );
 
   const monthlyValues = monthly.map((m) => m.totalSales);
-
   const monthlyChart = {
     labels: monthlyLabels,
     datasets: [
@@ -118,122 +113,118 @@ export default function AdminDashboard() {
       : monthlyChart;
 
   return (
-    <div style={{ padding: "40px" }}>
-      <h1>Admin Dashboard</h1>
+    <>
+      <AdminNavbar onLogout={handleLogout} />
 
-      {/* LOGOUT BUTTON */}
-      <div style={{ marginTop: "15px" }}>
-        <button
-          onClick={handleLogout}
-          style={{
-            padding: "8px 16px",
-            background: "red",
-            color: "white",
-            borderRadius: "8px",
-            cursor: "pointer",
-            border: "none",
-          }}
-        >
-          Logout
-        </button>
-      </div>
+      {/* Wrapper utama - ada paddingTop agar tidak tertutup navbar */}
+      <div style={{ padding: "40px", paddingTop: "130px", maxWidth: "1200px", margin: "0 auto" }}>
 
-      {/* CHART SELECT */}
-      <div style={{ marginTop: "20px" }}>
-        <button
-          onClick={() => setSelectedChart("daily")}
-          style={buttonStyle(selectedChart === "daily")}
-        >
-          Harian
-        </button>
+        {/* ========================== */}
+        {/* SECTION: REKAP PENJUALAN  */}
+        {/* ========================== */}
+        <section id="rekap">
+          <h1>Admin Dashboard</h1>
 
-        <button
-          onClick={() => setSelectedChart("weekly")}
-          style={buttonStyle(selectedChart === "weekly")}
-        >
-          Mingguan
-        </button>
+          {/* Chart selector */}
+          <div style={{ marginTop: "20px" }}>
+            <button
+              onClick={() => setSelectedChart("daily")}
+              style={buttonStyle(selectedChart === "daily")}
+            >
+              Harian
+            </button>
 
-        <button
-          onClick={() => setSelectedChart("monthly")}
-          style={buttonStyle(selectedChart === "monthly")}
-        >
-          Bulanan
-        </button>
-      </div>
+            <button
+              onClick={() => setSelectedChart("weekly")}
+              style={buttonStyle(selectedChart === "weekly")}
+            >
+              Mingguan
+            </button>
 
-      {/* CHART DISPLAY */}
-      <div style={{ marginTop: "40px" }}>
-        <h2>
-          {selectedChart === "daily"
-            ? "📆 Penjualan Per Hari"
-            : selectedChart === "weekly"
-            ? "📈 Penjualan Per Minggu"
-            : "📊 Penjualan Per Bulan"}
-        </h2>
+            <button
+              onClick={() => setSelectedChart("monthly")}
+              style={buttonStyle(selectedChart === "monthly")}
+            >
+              Bulanan
+            </button>
+          </div>
 
-        <div style={{ width: "100%", height: "300px" }}>
-          <Bar data={chartToDisplay} />
-        </div>
-      </div>
+          {/* Chart */}
+          <div style={{ marginTop: "40px" }}>
+            <h2>
+              {selectedChart === "daily"
+                ? "📆 Penjualan Per Hari"
+                : selectedChart === "weekly"
+                ? "📈 Penjualan Per Minggu"
+                : "📊 Penjualan Per Bulan"}
+            </h2>
 
-      {/* TRANSACTION TABLE */}
-      <div style={{ marginTop: "50px" }}>
-        <h2>🧾 Riwayat Transaksi</h2>
+            <div style={{ width: "100%", height: "300px" }}>
+              <Bar data={chartToDisplay} />
+            </div>
+          </div>
+        </section>
 
-        <table
-          style={{
-            width: "100%",
-            marginTop: "20px",
-            borderCollapse: "collapse",
-            border: "1px solid #ddd",
-          }}
-        >
-          <thead>
-            <tr style={{ background: "#f3f3f3" }}>
-              <th style={th}>Order ID</th>
-              <th style={th}>Customer</th>
-              <th style={th}>Phone</th>
-              <th style={th}>Items</th>
-              <th style={th}>Courier</th>
-              <th style={th}>Address</th>
-              <th style={th}>Description</th>
-              <th style={th}>Status</th>
-              <th style={th}>Total</th>
-              <th style={th}>Tanggal</th>
-            </tr>
-          </thead>
+        {/* ========================== */}
+        {/* SECTION: TRANSAKSI         */}
+        {/* ========================== */}
+        <section id="transaksi" style={{ marginTop: "70px" }}>
+          <h2>🧾 Riwayat Transaksi</h2>
 
-          <tbody>
-            {(transactions.checkout ?? []).map((c) => (
-              <tr key={c._id} style={{ borderBottom: "1px solid #eee" }}>
-                <td style={td}>{c.orderId}</td>
-                <td style={td}>
-                  {c.customer?.firstName} {c.customer?.lastName}
-                </td>
-                <td style={td}>{c.customer?.phone}</td>
-
-                <td style={td}>
-                  {c.items?.map((item, i) => (
-                    <div key={i}>
-                      <b>{item.name}</b> (x{item.qty}) - {item.color}
-                    </div>
-                  ))}
-                </td>
-
-                <td style={td}>{c.customer?.courier}</td>
-                <td style={td}>{c.customer?.address}</td>
-                <td style={td}>{c.customer?.description}</td>
-                <td style={td}>{c.status}</td>
-
-                <td style={td}>Rp {c.total?.toLocaleString()}</td>
-                <td style={td}>{new Date(c.createdAt).toLocaleString()}</td>
+          <table
+            style={{
+              width: "100%",
+              marginTop: "20px",
+              borderCollapse: "collapse",
+              border: "1px solid #ddd",
+            }}
+          >
+            <thead>
+              <tr style={{ background: "#f3f3f3" }}>
+                <th style={th}>Order ID</th>
+                <th style={th}>Customer</th>
+                <th style={th}>Phone</th>
+                <th style={th}>Items</th>
+                <th style={th}>Courier</th>
+                <th style={th}>Address</th>
+                <th style={th}>Description</th>
+                <th style={th}>Status</th>
+                <th style={th}>Total</th>
+                <th style={th}>Tanggal</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody>
+              {(transactions.checkout ?? []).map((c) => (
+                <tr key={c._id} style={{ borderBottom: "1px solid #eee" }}>
+                  <td style={td}>{c.orderId}</td>
+                  <td style={td}>
+                    {c.customer?.firstName} {c.customer?.lastName}
+                  </td>
+                  <td style={td}>{c.customer?.phone}</td>
+
+                  <td style={td}>
+                    {c.items?.map((item, i) => (
+                      <div key={i}>
+                        <b>{item.name}</b> (x{item.qty}) - {item.color}
+                      </div>
+                    ))}
+                  </td>
+
+                  <td style={td}>{c.customer?.courier}</td>
+                  <td style={td}>{c.customer?.address}</td>
+                  <td style={td}>{c.customer?.description}</td>
+                  <td style={td}>{c.status}</td>
+
+                  <td style={td}>Rp {c.total?.toLocaleString()}</td>
+                  <td style={td}>{new Date(c.createdAt).toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
       </div>
-    </div>
+    </>
   );
 }
 
