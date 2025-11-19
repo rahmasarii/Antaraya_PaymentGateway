@@ -85,12 +85,12 @@ export default function ShopPage() {
       <nav className="navbar">
         <div className="navbar-container">
           <div className="navbar-logo">
-  <img 
-    src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/2c7a0a58-e2d7-4e3b-99cb-7187e398953d/Logo+Putih+Transparent+Antaraya+Original.png?format=1500w" 
-    alt="Antaraya Logo"
-    onClick={() => router.push('/')}
-  />
-</div>
+            <img 
+              src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/2c7a0a58-e2d7-4e3b-99cb-7187e398953d/Logo+Putih+Transparent+Antaraya+Original.png?format=1500w" 
+              alt="Antaraya Logo"
+              onClick={() => router.push('/')}
+            />
+          </div>
           <div className="navbar-menu">
             <button onClick={() => router.push('/')} className="nav-link">
               Home
@@ -126,7 +126,16 @@ export default function ShopPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="hero-section">
+      <section 
+        className="hero-section"
+        style={{
+          backgroundImage: 'url(https://images.squarespace-cdn.com/content/v1/5ec321c2af33de48734cc929/b501ce91-c834-4f50-b1ff-5064bb688549/image-asset+%286%29.jpeg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          position: 'relative'
+        }}
+      >
         <div className="hero-content">
           <h1 className="hero-title">Premium Audio Collection</h1>
           <p className="hero-subtitle">Experience the finest sound quality</p>

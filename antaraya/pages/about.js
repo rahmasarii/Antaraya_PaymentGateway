@@ -151,7 +151,7 @@ export default function AboutPage() {
           <div className="contact-form-section">
             <div className="contact-form-header">
               <h2>Hubungi Kami</h2>
-              <p>Apakah anda tertarik untuk bekerja sama ? Isi form sebelah ini dan kami akan menghubungi anda secepatnya. Kami tidak sabar untuk mendengar dari anda!</p>
+              <p>Apakah anda tertarik untuk bekerja sama ? Isi form ini dan kami akan menghubungi anda secepatnya. Kami tidak sabar untuk mendengar dari anda!</p>
             </div>
             <div className="contact-form-wrapper">
               <form onSubmit={handleSubmit} className="contact-form">

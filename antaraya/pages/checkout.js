@@ -97,7 +97,7 @@ export default function Checkout() {
       <section className="checkout-section">
         <div className="container">
           <div className="checkout-header">
-            <h1 className="checkout-title">🛒 Keranjang Belanja</h1>
+            <h1 className="checkout-title">Keranjang Belanja</h1>
             {cart.length > 0 && (
               <button onClick={handleClearCart} className="btn-clear-cart">
                 Kosongkan Keranjang

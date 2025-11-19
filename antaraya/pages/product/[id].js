@@ -324,14 +324,14 @@ export default function ProductDetail() {
                   className="btn-add-cart"
                   disabled={product.status === 'HABIS'}
                 >
-                  🛒 Tambah ke Keranjang
+                  Tambah ke Keranjang
                 </button>
                 <button
                   onClick={buyNow}
                   className="btn-buy-now"
                   disabled={product.status === 'HABIS'}
                 >
-                  💳 Beli Sekarang
+                  Beli Sekarang
                 </button>
               </div>
 
