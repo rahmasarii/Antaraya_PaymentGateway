@@ -93,6 +93,13 @@ export default function Checkout() {
         </div>
       </nav>
 
+      <button
+  onClick={() => window.open("https://wa.me/6281296135571", "_blank")}
+  className="whatsapp-floating-btn"
+>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
+</button>
+
       {/* Checkout Section */}
       <section className="checkout-section">
         <div className="container">
@@ -288,25 +295,28 @@ export default function Checkout() {
           <div className="footer-divider"></div>
 
           <div className="footer-content">
-            <div className="footer-section">  
-              <p>Premium audio equipment untuk pengalaman mendengar terbaik Anda.</p>
-            </div>
             <div className="footer-section">
-              <h4>Follow Us</h4>
-              <div className="social-links">
-                <a href="https://www.instagram.com/pt.antarayapersada/" className="social-link">Instagram</a>
-                <a href="https://shopee.co.id/antarayapersada" className="social-link">Shopee</a>
-                <a href="https://www.tokopedia.com/antaraya-1" className="social-link">Tokopedia</a>
-              </div>
-            </div>
-            <div className="footer-section">
-              <h4>Hubungi Kami</h4>
+              <h3>Hubungi Kami</h3>
               <p>Gading Serpong, +62 812-9613-5571</p>
               <p>Jakarta Barat, +62 813-1898-3498</p>
               <br />
               <p>Senin-Jumat: 8.00 am - 17.30 pm</p>
               <p>Sabtu: 8.00 am - 13.00 pm</p>
             </div>
+            <div className="footer-section">
+              <h3>Follow Us</h3>
+              <div className="social-links">
+                <a href="https://www.instagram.com/pt.antarayapersada/" className="social-link">Instagram</a>
+                <a href="https://shopee.co.id/antarayapersada" className="social-link">Shopee</a>
+                <a href="https://www.tokopedia.com/antaraya-1" className="social-link">Tokopedia</a>
+              </div>
+            </div>
+            <div className="footer-section">  
+              <h3>ANTARAYA</h3>
+              <p>Premium audio equipment untuk pengalaman mendengar terbaik Anda.</p>
+            </div>
+            
+            
           </div>
           <div className="footer-bottom">
             <p>© 2024 Antaraya. All rights reserved.</p>
