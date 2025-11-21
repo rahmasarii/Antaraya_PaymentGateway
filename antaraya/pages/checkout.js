@@ -229,7 +229,7 @@ export default function Checkout() {
               <h3>Keranjang Belanja Kosong</h3>
               <p>Belum ada produk yang ditambahkan ke keranjang</p>
               <button
-                onClick={() => router.push("/")}
+                onClick={() => router.push("/shop")}
                 className="btn-shop-now"
               >
                 Mulai Belanja
