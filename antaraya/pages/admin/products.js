@@ -599,27 +599,45 @@ export default function AdminProducts() {
 
             <h3 className="font-semibold mt-3">Gallery Images</h3>
 
-            {/* ADD GALLERY IMAGE */}
-            <div className="flex gap-2 mb-2">
-              <input
-                className="border p-2 w-full rounded"
-                placeholder="New Image URL"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    if (!e.target.value) return;
-                    setEditProduct({
-                      ...editProduct,
-                      galleryImages: [
-                        ...editProduct.galleryImages,
-                        e.target.value,
-                      ],
-                    });
-                    e.target.value = "";
-                  }
-                }}
-              />
-            </div>
+          {/* ADD GALLERY IMAGE - URL INPUT */}
+<div className="flex gap-2 mb-2">
+  <input
+    className="border p-2 w-full rounded"
+    placeholder="New Image URL"
+    onKeyDown={(e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        if (!e.target.value) return;
+        setEditProduct({
+          ...editProduct,
+          galleryImages: [
+            ...editProduct.galleryImages,
+            e.target.value,
+          ],
+        });
+        e.target.value = "";
+      }
+    }}
+  />
+  <button
+    type="button"
+    onClick={(e) => {
+      const input = e.target.previousElementSibling;
+      if (!input.value) return;
+      setEditProduct({
+        ...editProduct,
+        galleryImages: [
+          ...editProduct.galleryImages,
+          input.value,
+        ],
+      });
+      input.value = "";
+    }}
+    className="bg-green-600 text-white px-3 rounded"
+  >
+    Add URL
+  </button>
+</div>
 
             {/* File Upload for Gallery in Edit */}
             <input
@@ -692,28 +710,64 @@ export default function AdminProducts() {
               ))}
             </div>
 
+                <select
+  value={editProduct.status}
+  onChange={(e) =>
+    setEditProduct({ ...editProduct, status: e.target.value })
+  }
+  className="border p-2 w-full rounded"
+>
+  <option value="READY">READY</option>
+  <option value="HABIS">HABIS</option>
+</select>
+
+
             {/* COLORS */}
             <h3 className="font-semibold mt-2">Colors</h3>
 
-            {/* ADD COLOR */}
-            <div className="flex gap-2 mb-2">
-              <input
-                placeholder="Color Name"
-                className="border p-2 w-full rounded"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    const colorName = e.target.value.trim();
-                    if (!colorName) return;
-                    setEditProduct({
-                      ...editProduct,
-                      colors: [...editProduct.colors, { colorName, image: "" }],
-                    });
-                    e.target.value = "";
-                  }
-                }}
-              />
-            </div>
+         {/* ADD COLOR - WITH URL INPUT */}
+<div className="border p-3 rounded mb-2">
+  <h3 className="font-semibold mb-2">Add Color Variant</h3>
+  
+  <div className="space-y-2 mb-2">
+    <input
+      placeholder="Color Name"
+      className="border p-2 w-full rounded"
+      id="colorNameInput"
+    />
+    
+    <input
+      placeholder="Color Image URL"
+      className="border p-2 w-full rounded"
+      id="colorImageInput"
+    />
+  </div>
+
+  <button
+    type="button"
+    onClick={() => {
+      const nameInput = document.getElementById('colorNameInput');
+      const imageInput = document.getElementById('colorImageInput');
+      const colorName = nameInput.value.trim();
+      
+      if (!colorName) return alert("Color name is required!");
+      
+      setEditProduct({
+        ...editProduct,
+        colors: [...editProduct.colors, { 
+          colorName, 
+          image: imageInput.value 
+        }],
+      });
+      
+      nameInput.value = "";
+      imageInput.value = "";
+    }}
+    className="bg-green-600 text-white px-3 py-2 rounded w-full"
+  >
+    Add Color Variant
+  </button>
+</div>
 
           {/* COLOR LIST */}
 <div className="flex flex-wrap gap-2">
