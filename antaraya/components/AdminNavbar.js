@@ -8,7 +8,7 @@ export default function AdminNavbar({ onLogout }) {
 
   const [activeSection, setActiveSection] = useState("rekap");
 
-  const isDashboard = router.pathname === "/admin/dashboard";
+  const isDashboard = router.pathname === "/admin";
   const isProducts = router.pathname === "/admin/products";
 
   /* Detect active section while scrolling */
@@ -34,7 +34,7 @@ export default function AdminNavbar({ onLogout }) {
 
   const scrollTo = (id) => {
     const element = document.getElementById(id);
-    if (!element) return router.push(`/admin/dashboard#${id}`);
+    if (!element) return router.push(`/admin?section=${id}`);
 
     element.scrollIntoView({ behavior: "smooth" });
     setOpen(false);
@@ -47,7 +47,7 @@ export default function AdminNavbar({ onLogout }) {
         {/* LOGO */}
         <div
           className={styles.navbarLogo}
-          onClick={() => router.push("/admin/dashboard")}
+          onClick={() => router.push("/admin")}
         >
           <h1>ADMIN</h1>
         </div>
