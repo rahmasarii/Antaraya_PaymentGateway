@@ -30,7 +30,6 @@
   overflow: hidden;
   background-color: #f9fafb;
   border: 1px solid #e5e7eb;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .main-image {
@@ -38,10 +37,6 @@
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
-}
-
-.main-image-container:hover .main-image {
-  transform: scale(1.05);
 }
 
 /* Thumbnail Gallery */
@@ -132,10 +127,7 @@
 
 /* Product Description */
 .product-description {
-  background-color: #f9fafb;
   padding: 1.5rem;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
 }
 
 .product-description h3 {

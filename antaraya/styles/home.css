@@ -336,27 +336,11 @@
 
 .shipping-subtitle {
   font-size: 1.375rem;
-  color: #4b5563;
+  font-weight: 400;
+  color: #1a1a1a;
   line-height: 1.8;
 }
 
-.highlight-text {
-  font-weight: 700;
-  color: #1a1a1a;
-  position: relative;
-  display: inline-block;
-}
-
-.highlight-text::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background: linear-gradient(90deg, #1a1a1a 0%, #4b5563 100%);
-  border-radius: 2px;
-}
 
 .courier-logos {
   display: grid;
@@ -372,17 +356,9 @@
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 16px;
-  background-color: #ffffff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.courier-logo-item:hover {
-  transform: translateY(-8px) scale(1.05);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
-  background-color: #fafafa;
-}
 
 .courier-logo-item img {
   max-width: 100%;
@@ -394,16 +370,11 @@
   transition: all 0.4s ease;
 }
 
-.courier-logo-item:hover img {
-  opacity: 1;
-  filter: grayscale(0%);
-  transform: scale(1.05);
-}
 
 /* ===== CONTACT SECTION ===== */
 .contact-section {
   padding: 6rem 0;
-  background: linear-gradient(to bottom, #fafafa 0%, #ffffff 100%);
+  background: #1a1a1a;
 }
 
 .contact-grid {
@@ -424,7 +395,7 @@
   font-size: 3rem;
   font-weight: 800;
   margin-left: 2rem;
-  color: #1a1a1a;
+  color: white;
   margin-bottom: 1.5rem;
   letter-spacing: -0.5px;
   line-height: 1.2;
@@ -441,11 +412,11 @@
   background-color: #ffffff;
   padding: 3rem;
   border-radius: 20px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 40px white;
   border: 1px solid #e5e7eb;
   transition: all 0.3s ease;
   width: 100%;
-  max-width: 100%;   /* atau bisa dihapus saja */
+  max-width: 100%;  
 }
 
 .contact-form-wrapper:hover {
@@ -552,6 +523,20 @@
 }
 
 @media (max-width: 768px) {
+  .hero-section-home .hero-content {
+    padding: 0 1.75rem; /* tambahkan ruang kiri kanan */
+  }
+
+  .hero-section-home h1 {
+    font-size: 2.2rem !important; /* agar proporsional di mobile */
+    line-height: 1.25;
+  }
+
+  .hero-section-home p {
+    font-size: 1.15rem !important;
+    line-height: 1.6;
+  }
+
   .section-header {
     flex-direction: column;
     align-items: flex-start;
@@ -626,6 +611,18 @@
 }
 
 @media (max-width: 480px) {
+  .hero-section-home .hero-content {
+    padding: 0 1.25rem; /* sedikit lebih rapat untuk layar sangat kecil */
+  }
+
+  .hero-section-home h1 {
+    font-size: 1.85rem !important;
+  }
+
+  .hero-section-home p {
+    font-size: 1rem !important;
+  }
+  
   .section-title {
     font-size: 1.75rem;
   }

@@ -59,7 +59,8 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4rem;
-  align-items: center;
+  align-items: flex-start; 
+  margin: 0 1rem;
 }
 
 .who-we-are-text h2 {
@@ -82,21 +83,24 @@
 }
 
 .who-we-are-image {
-  width: 100%;
-  border-radius: 12px;
-  overflow: hidden;
+width: 100%;
+height: 150%; /* turunin sedikit biar tidak nembus ke section founder */; /* dari 130% -> 180% agar jauh lebih panjang */
+border-radius: 1px;
+overflow: hidden;
 }
 
+
 .who-we-are-image img {
-  width: 100%;
-  height: auto;
-  display: block;
-  object-fit: cover;
+width: 100%;
+height: 100%; /* paksa gambar mengikuti container */
+object-fit: cover;
+max-height: 800px; /* batasi tinggi maksimum supaya tidak lewat container */; /* zoom otomatis */
+object-position: center; /* fokus tetap di tengah */
 }
+
 
 /* Founder Section */
 .founder-section {
-  background-color: #f9fafb;
   padding: 4rem;
   border-radius: 12px;
   margin-bottom: 6rem;
@@ -351,6 +355,16 @@
 
   .who-we-are-text p {
     font-size: 1rem;
+  }
+
+   .who-we-are-image {
+    height: auto;   
+    max-height: 400px;     
+  }
+
+  .who-we-are-image img {
+    height: 100%;
+    object-fit: cover;
   }
 
   .founder-section {

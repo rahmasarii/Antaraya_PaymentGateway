@@ -14,7 +14,17 @@ export default function Payment() {
     addressDesc: "",
   });
   const [loading, setLoading] = useState(false);
+  const [cartItemCount, setCartItemCount] = useState(0);
   const router = useRouter();
+
+  // Hitung total item di cart
+  const updateCartCount = (cartData) => {
+    const totalItems = cartData.reduce(
+      (sum, item) => sum + (item.qty || item.quantity || 1),
+      0
+    );
+    setCartItemCount(totalItems);
+  };
 
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
@@ -24,6 +34,7 @@ export default function Payment() {
       return;
     }
     setCart(storedCart);
+    updateCartCount(storedCart);
   }, [router]);
 
   const totalPrice = cart.reduce(
@@ -50,6 +61,8 @@ export default function Payment() {
       const { token } = res.data;
       // hapus cart setelah buat transaksi
       localStorage.removeItem("cart");
+      setCart([]);
+      setCartItemCount(0);
 
       window.snap.pay(token, {
         onSuccess: function (result) {
@@ -86,36 +99,72 @@ export default function Payment() {
     setLoading(false);
   };
 
+  // Navbar dengan struktur sama seperti di about.js
+  const Navbar = () => (
+    <nav className="navbar">
+      <div className="navbar-container">
+        <div className="navbar-logo">
+          <img
+            src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/2c7a0a58-e2d7-4e3b-99cb-7187e398953d/Logo+Putih+Transparent+Antaraya+Original.png?format=1500w"
+            alt="Antaraya Logo"
+            onClick={() => router.push("/")}
+          />
+        </div>
+        <div className="navbar-menu">
+          <button onClick={() => router.push("/")} className="nav-link">
+            Home
+          </button>
+          <button
+            onClick={() => router.push("/shop")}
+            className="nav-link active"
+          >
+            Shop
+          </button>
+          <button onClick={() => router.push("/about")} className="nav-link">
+            About
+          </button>
+        </div>
+        <div
+          className="navbar-cart"
+          onClick={() => router.push("/checkout")}
+        >
+          <svg
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="cart-icon"
+          >
+            <circle cx="9" cy="21" r="1" />
+            <circle cx="20" cy="21" r="1" />
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+          </svg>
+          {cartItemCount > 0 && (
+            <span className="cart-badge">{cartItemCount}</span>
+          )}
+        </div>
+      </div>
+    </nav>
+  );
+
   return (
     <div className="main-container">
       {/* Navbar */}
-      <nav className="navbar">
-        <div className="navbar-container">
-          <div className="navbar-logo">
-            <img
-              src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/2c7a0a58-e2d7-4e3b-99cb-7187e398953d/Logo+Putih+Transparent+Antaraya+Original.png?format=1500w"
-              alt="Antaraya Logo"
-              onClick={() => router.push("/")}
-            />
-          </div>
-          <div className="navbar-menu">
-            <button
-              onClick={() => router.push("/checkout")}
-              className="nav-link"
-              style={{ background: "none", border: "none", cursor: "pointer" }}
-            >
-              Kembali ke Keranjang
-            </button>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
-            <button
-  onClick={() => window.open("https://wa.me/6281296135571", "_blank")}
-  className="whatsapp-floating-btn"
->
-  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
-</button>
+      <button
+        onClick={() => window.open("https://wa.me/6281296135571", "_blank")}
+        className="whatsapp-floating-btn"
+      >
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+          alt="WhatsApp"
+        />
+      </button>
 
       {/* Payment Section */}
       <section className="payment-section">
@@ -131,7 +180,10 @@ export default function Payment() {
             <div className="payment-total-chip">
               <span>Total Pembayaran</span>
               <strong>
-                Rp{totalPrice.toLocaleString("id-ID", { minimumFractionDigits: 0 })}
+                Rp
+                {totalPrice.toLocaleString("id-ID", {
+                  minimumFractionDigits: 0,
+                })}
               </strong>
             </div>
           </div>
@@ -164,7 +216,9 @@ export default function Payment() {
                       Rp
                       {(
                         item.price * (item.qty || item.quantity || 1)
-                      ).toLocaleString("id-ID", { minimumFractionDigits: 0 })}
+                      ).toLocaleString("id-ID", {
+                        minimumFractionDigits: 0,
+                      })}
                     </div>
                   </div>
                 ))}
@@ -174,7 +228,10 @@ export default function Payment() {
                 <div className="payment-summary-row">
                   <span>Total</span>
                   <span className="payment-summary-total">
-                    Rp{totalPrice.toLocaleString("id-ID", { minimumFractionDigits: 0 })}
+                    Rp
+                    {totalPrice.toLocaleString("id-ID", {
+                      minimumFractionDigits: 0,
+                    })}
                   </span>
                 </div>
                 <p className="payment-summary-note">
@@ -326,36 +383,6 @@ export default function Payment() {
       {/* Footer */}
       <footer className="footer">
         <div className="container">
-          {/* Brand Logos Section */}
-          <div className="footer-brands">
-            <div className="brand-logo-item">
-              <img 
-                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/b06286ba-ff07-4798-b70d-548e404c6c24/Long+normal+26x7.5.png?format=750w"
-                alt="Antaraya"
-              />
-            </div>
-            <div className="brand-logo-item">
-              <img 
-                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/4fa552a3-b070-4147-b2ef-39317c0384d1/Jive+Transparent+black.png?format=500w"
-                alt="Jive Audio"
-              />
-            </div>
-            <div className="brand-logo-item">
-              <img 
-                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/b8cb54c1-ba98-40f4-b13c-c338b416739e/Alluve+long+inv+bg.png?format=750w"
-                alt="Alluve"
-              />
-            </div>
-            <div className="brand-logo-item">
-              <img 
-                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/19be8492-2927-49bd-9923-d8b605f00c0d/SINGLE+BEAN+Transparent.png?format=500w"
-                alt="Single Bean"
-              />
-            </div>
-          </div>
-
-          <div className="footer-divider"></div>
-
           <div className="footer-content">
             <div className="footer-section">
               <h3>Hubungi Kami</h3>
@@ -366,20 +393,64 @@ export default function Payment() {
               <p>Sabtu: 8.00 am - 13.00 pm</p>
             </div>
             <div className="footer-section">
-              <h3>Follow Us</h3>
+              <h3>Ikuti Kami</h3>
               <div className="social-links">
-                <a href="https://www.instagram.com/pt.antarayapersada/" className="social-link">Instagram</a>
-                <a href="https://shopee.co.id/antarayapersada" className="social-link">Shopee</a>
-                <a href="https://www.tokopedia.com/antaraya-1" className="social-link">Tokopedia</a>
+                <a
+                  href="https://www.instagram.com/pt.antarayapersada/"
+                  className="social-link"
+                >
+                  Instagram
+                </a>
+                <a
+                  href="https://shopee.co.id/antarayapersada"
+                  className="social-link"
+                >
+                  Shopee
+                </a>
+                <a
+                  href="https://www.tokopedia.com/antaraya-1"
+                  className="social-link"
+                >
+                  Tokopedia
+                </a>
               </div>
             </div>
-            <div className="footer-section">  
+            <div className="footer-section">
               <h3>ANTARAYA</h3>
-              <p>Premium audio equipment untuk pengalaman mendengar terbaik Anda.</p>
+              <p>
+                Premium audio equipment untuk pengalaman mendengar terbaik Anda.
+              </p>
             </div>
-            
-            
           </div>
+
+          {/* Brand Logos Section */}
+          <div className="footer-brands">
+            <div className="brand-logo-item">
+              <img
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/b06286ba-ff07-4798-b70d-548e404c6c24/Long+normal+26x7.5.png?format=750w"
+                alt="Antaraya"
+              />
+            </div>
+            <div className="brand-logo-item">
+              <img
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/4fa552a3-b070-4147-b2ef-39317c0384d1/Jive+Transparent+black.png?format=500w"
+                alt="Jive Audio"
+              />
+            </div>
+            <div className="brand-logo-item">
+              <img
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/b8cb54c1-ba98-40f4-b13c-c338b416739e/Alluve+long+inv+bg.png?format=750w"
+                alt="Alluve"
+              />
+            </div>
+            <div className="brand-logo-item">
+              <img
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/19be8492-2927-49bd-9923-d8b605f00c0d/SINGLE+BEAN+Transparent.png?format=500w"
+                alt="Single Bean"
+              />
+            </div>
+          </div>
+
           <div className="footer-bottom">
             <p>© 2024 Antaraya. All rights reserved.</p>
           </div>

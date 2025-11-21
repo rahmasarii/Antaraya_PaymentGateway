@@ -1,9 +1,10 @@
 /* ===== PAYMENT PAGE STYLES ===== */
 
 .payment-section {
-  padding: 3rem 0;
+  padding: 2rem 0;
   min-height: 70vh;
-  background-color: #f9fafb;
+  background-color: white;
+  margin-bottom: 1rem;
 }
 
 /* Header */
@@ -55,7 +56,7 @@
 /* Layout */
 .payment-content {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  grid-template-columns: 30fr 70fr;
   gap: 2rem;
   align-items: flex-start;
 }
@@ -73,7 +74,7 @@
   font-size: 1.25rem;
   font-weight: 600;
   color: #111827;
-  margin-bottom: 1.25rem;
+  margin-bottom: 2rem;
 }
 
 /* Order Summary */
