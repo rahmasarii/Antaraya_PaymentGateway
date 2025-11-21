@@ -187,6 +187,13 @@ export default function ProductDetail() {
         </div>
       </nav>
 
+            <button
+  onClick={() => window.open("https://wa.me/6281296135571", "_blank")}
+  className="whatsapp-floating-btn"
+>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
+</button>
+
       {/* Product Detail Section */}
       <section className="product-detail-section">
         <div className="container">
@@ -324,14 +331,14 @@ export default function ProductDetail() {
                   className="btn-add-cart"
                   disabled={product.status === 'HABIS'}
                 >
-                  🛒 Tambah ke Keranjang
+                  Tambah ke Keranjang
                 </button>
                 <button
                   onClick={buyNow}
                   className="btn-buy-now"
                   disabled={product.status === 'HABIS'}
                 >
-                  💳 Beli Sekarang
+                  Beli Sekarang
                 </button>
               </div>
 
@@ -343,27 +350,59 @@ export default function ProductDetail() {
       {/* Footer */}
       <footer className="footer">
         <div className="container">
+          {/* Brand Logos Section */}
+          <div className="footer-brands">
+            <div className="brand-logo-item">
+              <img 
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/b06286ba-ff07-4798-b70d-548e404c6c24/Long+normal+26x7.5.png?format=750w"
+                alt="Antaraya"
+              />
+            </div>
+            <div className="brand-logo-item">
+              <img 
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/4fa552a3-b070-4147-b2ef-39317c0384d1/Jive+Transparent+black.png?format=500w"
+                alt="Jive Audio"
+              />
+            </div>
+            <div className="brand-logo-item">
+              <img 
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/b8cb54c1-ba98-40f4-b13c-c338b416739e/Alluve+long+inv+bg.png?format=750w"
+                alt="Alluve"
+              />
+            </div>
+            <div className="brand-logo-item">
+              <img 
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/19be8492-2927-49bd-9923-d8b605f00c0d/SINGLE+BEAN+Transparent.png?format=500w"
+                alt="Single Bean"
+              />
+            </div>
+          </div>
+
+          <div className="footer-divider"></div>
+
           <div className="footer-content">
             <div className="footer-section">
-              <h3>ANTARAYA</h3>
-              <p>Premium audio equipment untuk pengalaman mendengar terbaik Anda.</p>
+              <h3>Hubungi Kami</h3>
+              <p>Gading Serpong, +62 812-9613-5571</p>
+              <p>Jakarta Barat, +62 813-1898-3498</p>
+              <br />
+              <p>Senin-Jumat: 8.00 am - 17.30 pm</p>
+              <p>Sabtu: 8.00 am - 13.00 pm</p>
             </div>
             <div className="footer-section">
-              <h4>Follow Us</h4>
+              <h3>Follow Us</h3>
               <div className="social-links">
                 <a href="https://www.instagram.com/pt.antarayapersada/" className="social-link">Instagram</a>
                 <a href="https://shopee.co.id/antarayapersada" className="social-link">Shopee</a>
                 <a href="https://www.tokopedia.com/antaraya-1" className="social-link">Tokopedia</a>
               </div>
             </div>
-            <div className="footer-section">
-              <h4>Hubungi Kami</h4>
-              <p>Gading Serpong, +62 812-9613-5571</p>
-              <p>Jakarta Barat, +62 813-1898-3498</p>
-             <br></br>
-              <p>Senin-Jumat: 8.00 am - 17.30 pm</p>
-              <p>Sabtu: 8.00 am - 13.00 pm</p>
+            <div className="footer-section">  
+              <h3>ANTARAYA</h3>
+              <p>Premium audio equipment untuk pengalaman mendengar terbaik Anda.</p>
             </div>
+            
+            
           </div>
           <div className="footer-bottom">
             <p>© 2024 Antaraya. All rights reserved.</p>

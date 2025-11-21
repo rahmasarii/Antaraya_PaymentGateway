@@ -6,6 +6,14 @@ export default function HomePage() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [cartItemCount, setCartItemCount] = useState(0);
+  
+  // Contact form state
+  const [contactForm, setContactForm] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [formLoading, setFormLoading] = useState(false);
 
   useEffect(() => {
     fetchFeaturedProducts();
@@ -22,12 +30,41 @@ export default function HomePage() {
     try {
       const response = await fetch('/api/products');
       const data = await response.json();
-      // Ambil 4 produk pertama untuk featured
       setFeaturedProducts(data.slice(0, 4));
     } catch (error) {
       console.error('Error fetching products:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleContactSubmit = async (e) => {
+    e.preventDefault();
+    setFormLoading(true);
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(contactForm),
+      });
+
+      const data = await res.json();
+      setFormLoading(false);
+
+      if (res.ok) {
+        alert("Pesan Anda telah terkirim! Kami akan segera menghubungi Anda 😊");
+        setContactForm({
+          name: "",
+          email: "",
+          message: "",
+        });
+      } else {
+        alert("Gagal mengirim pesan. Silakan coba lagi.");
+      }
+    } catch (error) {
+      setFormLoading(false);
+      alert("Terjadi kesalahan. Silakan coba lagi.");
     }
   };
 
@@ -84,6 +121,13 @@ export default function HomePage() {
           </div>
         </div>
       </nav>
+
+      <button
+  onClick={() => window.open("https://wa.me/6281296135571", "_blank")}
+  className="whatsapp-floating-btn"
+>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
+</button>
 
       {/* Hero Section */}
       <section 
@@ -221,30 +265,214 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Shipping Section */}
+      <section className="shipping-section">
+        <div className="container">
+          <div className="shipping-content">
+            <div className="shipping-text">
+              <h2 className="shipping-title">Pilihan Kurir</h2>
+              <p className="shipping-subtitle">
+                Gratis Ongkir Instant <span className="highlight-text">khusus daerah BSD City dan Gading Serpong</span>
+              </p>
+            </div>
+            <div className="courier-logos">
+              <div className="courier-logo-item">
+                <img 
+                  src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/0fc15baf-e243-4e82-98bd-47c1fce3c37d/0+J%26T+Express.png?format=500w"
+                  alt="J&T Express"
+                />
+              </div>
+              <div className="courier-logo-item">
+                <img 
+                  src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/788b542d-bc89-462f-bb47-d2465b0ccfaa/0+JNE+Express.png?format=500w"
+                  alt="JNE Express"
+                />
+              </div>
+              <div className="courier-logo-item">
+                <img 
+                  src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/4b78bf57-295d-4e7b-a137-4565eb47bf59/0+SiCepat+2.png?format=500w"
+                  alt="SiCepat"
+                />
+              </div>
+              <div className="courier-logo-item">
+                <img 
+                  src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/1856b44a-844f-43b4-bcff-708f9520a5a0/0+Gosend+Gojek.png?format=750w"
+                  alt="GoSend"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Form Section */}
+      <section className="contact-section">
+        <div className="container">
+          <div className="contact-grid">
+            <div className="contact-info">
+              <h2 className="contact-title">Untuk Kebutuhan Bisnis Anda.</h2>
+            </div>
+            
+            <div className="contact-form-wrapper">
+              <form onSubmit={handleContactSubmit} className="contact-form">
+                <div className="form-group">
+                  <label htmlFor="name">Nama Anda:</label>
+                  <input
+                    type="text"
+                    id="name"
+                    placeholder="Masukkan Nama"
+                    required
+                    value={contactForm.name}
+                    onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="email">E-mail Anda:</label>
+                  <input
+                    type="email"
+                    id="email"
+                    placeholder="Masukkan Email"
+                    required
+                    value={contactForm.email}
+                    onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="message">Pesan Anda:</label>
+                  <textarea
+                    id="message"
+                    rows="6"
+                    required
+                    value={contactForm.message}
+                    onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
+                  ></textarea>
+                </div>
+
+                <button type="submit" className="btn-submit" disabled={formLoading}>
+                  {formLoading ? "Mengirim..." : "POST"}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Peluang Bisnis Section */}
+<section className="business-opportunity-section">
+  <div className="container business-opportunity-container">
+    <div className="business-left image-grid">
+  <a href="https://www.instagram.com/p/DOfUUGAAYmZ/" target="_blank">
+    <img src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/1760054444247-1XQ0XHVL829G6V275N0T/image-asset.jpeg?format=500w" />
+  </a>
+
+  <a href="https://www.instagram.com/p/DOfURnEAaFn/" target="_blank">
+    <img src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/1760054445057-IZE5D4LLACIYRKTGGX6J/image-asset.jpeg?format=500w" />
+  </a>
+
+  <a href="https://www.instagram.com/p/DOfUHemgVtS/" target="_blank">
+    <img src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/1760054445799-5GWI33Q2BDHQE7MCALFA/image-asset.jpeg?format=500w" />
+  </a>
+
+  <a href="https://www.instagram.com/p/DMasmH5B2WJ/" target="_blank">
+    <img src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/1760054446582-EPTMHZHTR9TT5LRHL4T1/image-asset.jpeg?format=500w" />
+  </a>
+
+  <a href="https://www.instagram.com/p/DMasj1SBaLl/" target="_blank">
+    <img src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/1760054447311-QUW45OTEVFDYYHU180MA/image-asset.jpeg?format=500w" />
+  </a>
+
+  <a href="https://www.instagram.com/p/DMasgM7Ba1u/" target="_blank">
+    <img src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/1760054448024-RFXN8HRM7MQN58UZC3YT/image-asset.jpeg?format=500w" />
+  </a>
+</div>
+
+
+
+    <div className="business-right">
+      <h2 className="business-title">Peluang Bisnis<br/>Di Antaraya !</h2>
+      
+      <p className="business-subtitle">
+        Dapatkan komisi pertama anda dengan hanya menjual 1 produk pertama anda.
+      </p>
+
+      <p className="business-desc">
+        Kami membuka kesempatan untuk anda yang berminat menjadi :
+      </p>
+
+      <ul className="business-list">
+        <li>• Reseller</li>
+        <li>• Affiliate</li>
+        <li>• Dropshipper</li>
+      </ul>
+            <button
+              onClick={() => router.push('/')}
+              className="business-button"
+            >
+              SAYA TERTARIK!
+            </button>
+    </div>
+  </div>
+</section>
+
+
       {/* Footer */}
       <footer className="footer">
         <div className="container">
+          {/* Brand Logos Section */}
+          <div className="footer-brands">
+            <div className="brand-logo-item">
+              <img 
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/b06286ba-ff07-4798-b70d-548e404c6c24/Long+normal+26x7.5.png?format=750w"
+                alt="Antaraya"
+              />
+            </div>
+            <div className="brand-logo-item">
+              <img 
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/4fa552a3-b070-4147-b2ef-39317c0384d1/Jive+Transparent+black.png?format=500w"
+                alt="Jive Audio"
+              />
+            </div>
+            <div className="brand-logo-item">
+              <img 
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/b8cb54c1-ba98-40f4-b13c-c338b416739e/Alluve+long+inv+bg.png?format=750w"
+                alt="Alluve"
+              />
+            </div>
+            <div className="brand-logo-item">
+              <img 
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/19be8492-2927-49bd-9923-d8b605f00c0d/SINGLE+BEAN+Transparent.png?format=500w"
+                alt="Single Bean"
+              />
+            </div>
+          </div>
+
+          <div className="footer-divider"></div>
+
           <div className="footer-content">
             <div className="footer-section">
-              <h3>ANTARAYA</h3>
-              <p>Premium audio equipment untuk pengalaman mendengar terbaik Anda.</p>
-            </div>
-            <div className="footer-section">
-              <h4>Follow Us</h4>
-              <div className="social-links">
-                <a href="https://www.instagram.com/pt.antarayapersada/" className="social-link">Instagram</a>
-                <a href="https://shopee.co.id/antarayapersada" className="social-link">Shopee</a>
-                <a href="https://www.tokopedia.com/antaraya-1" className="social-link">Tokopedia</a>
-              </div>
-            </div>
-            <div className="footer-section">
-              <h4>Hubungi Kami</h4>
+              <h3>Hubungi Kami</h3>
               <p>Gading Serpong, +62 812-9613-5571</p>
               <p>Jakarta Barat, +62 813-1898-3498</p>
               <br />
               <p>Senin-Jumat: 8.00 am - 17.30 pm</p>
               <p>Sabtu: 8.00 am - 13.00 pm</p>
             </div>
+            <div className="footer-section">
+              <h3>Follow Us</h3>
+              <div className="social-links">
+                <a href="https://www.instagram.com/pt.antarayapersada/" className="social-link">Instagram</a>
+                <a href="https://shopee.co.id/antarayapersada" className="social-link">Shopee</a>
+                <a href="https://www.tokopedia.com/antaraya-1" className="social-link">Tokopedia</a>
+              </div>
+            </div>
+            <div className="footer-section">  
+              <h3>ANTARAYA</h3>
+              <p>Premium audio equipment untuk pengalaman mendengar terbaik Anda.</p>
+            </div>
+            
+            
           </div>
           <div className="footer-bottom">
             <p>© 2024 Antaraya. All rights reserved.</p>

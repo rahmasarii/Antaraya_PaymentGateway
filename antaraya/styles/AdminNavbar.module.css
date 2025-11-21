@@ -1,0 +1,128 @@
+/* NAVBAR CORE */
+.navbar {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  padding: 1.25rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+.navbarContainer {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* LOGO */
+.navbarLogo {
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+.navbarLogo:hover {
+  opacity: 0.8;
+}
+.navbarLogo h1 {
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+/* MENU DESKTOP */
+.navbarMenu {
+  display: flex;
+  gap: 3rem;
+  align-items: center;
+  margin-left: auto;
+  margin-right: 2rem;
+  transition: all 0.3s ease;
+}
+
+.navLink {
+  color: #ffffff;
+  background: none;
+  border: none;
+  text-decoration: none;
+  font-weight: 400;
+  font-size: 0.95rem;
+  padding: 0.5rem 0;
+  cursor: pointer;
+  position: relative;
+  letter-spacing: 0.4px;
+  transition: opacity 0.3s ease;
+}
+
+.navLink:hover {
+  opacity: 0.7;
+}
+
+/* UNDERLINE EFFECT */
+.navLink::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #ffffff;
+  transition: width 0.28s ease;
+}
+
+/* ACTIVE SECTION OR PAGE */
+.navLinkActive::after {
+  width: 100%;
+}
+
+/* MOBILE ICON */
+.mobileMenuIcon {
+  display: none;
+  cursor: pointer;
+  transition: opacity 0.25s ease;
+}
+.mobileMenuIcon:hover {
+  opacity: 0.7;
+}
+
+.bar {
+  width: 28px;
+  height: 3px;
+  background: white;
+  margin: 6px 0;
+  border-radius: 3px;
+  transition: 0.4s;
+}
+
+/* MOBILE MENU */
+@media (max-width: 900px) {
+  .navbarMenu {
+    position: absolute;
+    top: 75px;
+    right: 0;
+    background: #1a1a1a;
+    width: 240px;
+    flex-direction: column;
+    padding: 1.2rem 0;
+    display: none;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+
+    /* SLIDE ANIMATION */
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  .navbarMenuActive {
+    display: flex;
+    transform: translateX(0);
+    opacity: 1;
+    transition: transform 0.35s ease, opacity 0.35s ease;
+  }
+
+  .mobileMenuIcon {
+    display: block;
+  }
+}

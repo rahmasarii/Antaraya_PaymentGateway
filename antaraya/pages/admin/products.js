@@ -1,6 +1,8 @@
 // pages/admin/products.js
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
+// import AdminNavbar from "@/components/AdminNavbar";
+import "@/styles/AdminProducts.module.css";
 
 export default function AdminProducts() {
   const [products, setProducts] = useState([]);

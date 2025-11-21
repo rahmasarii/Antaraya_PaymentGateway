@@ -1,8 +1,12 @@
 /* ===== GLOBAL STYLES ===== */
+/* Import Google Font Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Poppins', sans-serif !important;
 }
 
 body {
@@ -28,7 +32,7 @@ body {
 .navbar {
   background-color: #1a1a1a;
   color: #ffffff;
-  padding: 1.25rem 0;
+  padding: 1.15rem 0;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -62,7 +66,7 @@ body {
 
 /* Logo Image Style */
 .navbar-logo img {
-  height: 50px;
+  height: 35px;
   width: auto;
   display: block;
 }
@@ -205,8 +209,8 @@ body {
 /* ===== FOOTER ===== */
 .footer {
   background-color: #1a1a1a;
-  color: #ffffff;
-  padding: 3rem 0 1rem;
+  color: #f3f2f2;
+  padding: 1.5rem 0.5rem;
   margin-top: auto;
 }
 
@@ -217,29 +221,65 @@ body {
   margin-bottom: 2rem;
 }
 
+.footer-section{
+  padding: 0rem 3rem;
+}
+
 .footer-section h3 {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 800;
   margin-bottom: 1rem;
   letter-spacing: 1px;
-}
-
-.footer-section h4 {
-  font-size: 1.125rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
 }
 
 .footer-section p {
   color: #9ca3af;
   line-height: 1.8;
   margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.footer-brands {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  padding: 1rem 0;
+  align-items: center;
+}
+
+.brand-logo-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0rem;
+}
+
+.brand-logo-item img {
+  max-width: 100%;
+  height: auto;
+  max-height: 65px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+  transition: all 0.3s ease;
+}
+
+.brand-logo-item:hover img {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.footer-divider {
+  height: 1px;
+  background-color: #374151;
+  margin: 1rem 0rem;
 }
 
 .social-links {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  font-size: 0.9rem;
 }
 
 .social-link {
@@ -250,6 +290,7 @@ body {
 
 .social-link:hover {
   color: #ffffff;
+   text-decoration: underline;
 }
 
 .footer-bottom {
@@ -258,6 +299,37 @@ body {
   text-align: center;
   color: #9ca3af;
 }
+
+/* ===== FLOATING WHATSAPP BUTTON ===== */
+
+.whatsapp-floating-btn {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  background-color: #25D366;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 9999;
+  border: none;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.whatsapp-floating-btn img {
+  width: 35px;
+  height: 35px;
+}
+
+.whatsapp-floating-btn:hover {
+  transform: scale(1.12);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.3);
+}
+
 
 /* ===== RESPONSIVE STYLES ===== */
 @media (max-width: 768px) {
@@ -292,6 +364,11 @@ body {
   .footer-content {
     grid-template-columns: 1fr;
   }
+  
+  .footer-brands {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -321,5 +398,10 @@ body {
     min-width: 16px;
     height: 16px;
     font-size: 0.65rem;
+  }
+  
+  .footer-brands {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 }

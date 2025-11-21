@@ -7,6 +7,7 @@ import '../styles/about.css';
 import '../styles/product-detail.css';
 import '../styles/checkout.css';
 import '../styles/auth.css';
+import '../styles/payment.css';
 
 export default function App({ Component, pageProps }) {
   // Enable cookies for all axios requests
@@ -23,4 +24,6 @@ export default function App({ Component, pageProps }) {
   }, []);
 
   return <Component {...pageProps} />;
+  
 }
+

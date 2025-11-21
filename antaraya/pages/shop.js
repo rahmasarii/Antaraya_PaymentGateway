@@ -85,12 +85,12 @@ export default function ShopPage() {
       <nav className="navbar">
         <div className="navbar-container">
           <div className="navbar-logo">
-  <img 
-    src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/2c7a0a58-e2d7-4e3b-99cb-7187e398953d/Logo+Putih+Transparent+Antaraya+Original.png?format=1500w" 
-    alt="Antaraya Logo"
-    onClick={() => router.push('/')}
-  />
-</div>
+            <img 
+              src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/2c7a0a58-e2d7-4e3b-99cb-7187e398953d/Logo+Putih+Transparent+Antaraya+Original.png?format=1500w" 
+              alt="Antaraya Logo"
+              onClick={() => router.push('/')}
+            />
+          </div>
           <div className="navbar-menu">
             <button onClick={() => router.push('/')} className="nav-link">
               Home
@@ -124,9 +124,23 @@ export default function ShopPage() {
           </div>
         </div>
       </nav>
-
+      <button
+  onClick={() => window.open("https://wa.me/6281296135571", "_blank")}
+  className="whatsapp-floating-btn"
+>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
+</button>
       {/* Hero Section */}
-      <section className="hero-section">
+      <section 
+        className="hero-section"
+        style={{
+          backgroundImage: 'url(https://images.squarespace-cdn.com/content/v1/5ec321c2af33de48734cc929/b501ce91-c834-4f50-b1ff-5064bb688549/image-asset+%286%29.jpeg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          position: 'relative'
+        }}
+      >
         <div className="hero-content">
           <h1 className="hero-title">Premium Audio Collection</h1>
           <p className="hero-subtitle">Experience the finest sound quality</p>
@@ -288,27 +302,59 @@ export default function ShopPage() {
       {/* Footer */}
       <footer className="footer">
         <div className="container">
+          {/* Brand Logos Section */}
+          <div className="footer-brands">
+            <div className="brand-logo-item">
+              <img 
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/b06286ba-ff07-4798-b70d-548e404c6c24/Long+normal+26x7.5.png?format=750w"
+                alt="Antaraya"
+              />
+            </div>
+            <div className="brand-logo-item">
+              <img 
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/4fa552a3-b070-4147-b2ef-39317c0384d1/Jive+Transparent+black.png?format=500w"
+                alt="Jive Audio"
+              />
+            </div>
+            <div className="brand-logo-item">
+              <img 
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/b8cb54c1-ba98-40f4-b13c-c338b416739e/Alluve+long+inv+bg.png?format=750w"
+                alt="Alluve"
+              />
+            </div>
+            <div className="brand-logo-item">
+              <img 
+                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/19be8492-2927-49bd-9923-d8b605f00c0d/SINGLE+BEAN+Transparent.png?format=500w"
+                alt="Single Bean"
+              />
+            </div>
+          </div>
+
+          <div className="footer-divider"></div>
+
           <div className="footer-content">
             <div className="footer-section">
-              <h3>ANTARAYA</h3>
-              <p>Premium audio equipment untuk pengalaman mendengar terbaik Anda.</p>
-            </div>
-            <div className="footer-section">
-              <h4>Follow Us</h4>
-              <div className="social-links">
-                <a href="https://www.instagram.com/pt.antarayapersada/" className="social-link">Instagram</a>
-                <a href="https://shopee.co.id/antarayapersada" className="social-link">Shopee</a>
-                <a href="https://www.tokopedia.com/antaraya-1" className="social-link">Tokopedia</a>
-              </div>
-            </div>
-            <div className="footer-section">
-              <h4>Hubungi Kami</h4>
+              <h3>Hubungi Kami</h3>
               <p>Gading Serpong, +62 812-9613-5571</p>
               <p>Jakarta Barat, +62 813-1898-3498</p>
               <br />
               <p>Senin-Jumat: 8.00 am - 17.30 pm</p>
               <p>Sabtu: 8.00 am - 13.00 pm</p>
             </div>
+            <div className="footer-section">
+              <h3>Follow Us</h3>
+              <div className="social-links">
+                <a href="https://www.instagram.com/pt.antarayapersada/" className="social-link">Instagram</a>
+                <a href="https://shopee.co.id/antarayapersada" className="social-link">Shopee</a>
+                <a href="https://www.tokopedia.com/antaraya-1" className="social-link">Tokopedia</a>
+              </div>
+            </div>
+            <div className="footer-section">  
+              <h3>ANTARAYA</h3>
+              <p>Premium audio equipment untuk pengalaman mendengar terbaik Anda.</p>
+            </div>
+            
+            
           </div>
           <div className="footer-bottom">
             <p>© 2024 Antaraya. All rights reserved.</p>
