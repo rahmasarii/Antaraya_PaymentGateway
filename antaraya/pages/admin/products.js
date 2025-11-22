@@ -158,19 +158,12 @@ export default function AdminProducts() {
     });
 
   // ADD GALLERY (ADD FORM) – URL atau File
-  const addGalleryImage = async () => {
-    if (!galleryInput) return alert("URL wajib!");
+ const addGalleryImage = async (file) => {
+  if (!file) return alert("Gambar belum dimasukkan!");
 
-    if (galleryInput instanceof File) {
-      await handleFileUpload(galleryInput, "gallery");
-    } else {
-      setForm({
-        ...form,
-        galleryImages: [...form.galleryImages, galleryInput],
-      });
-      setGalleryInput("");
-    }
-  };
+  // upload langsung
+  await handleFileUpload(file, "gallery");
+};
 
   const removeGalleryImage = (i) =>
     setForm({
@@ -399,19 +392,18 @@ export default function AdminProducts() {
                     </button>
                   </div>
 
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files[0];
-                      if (file) {
-                        setGalleryInput(file);
-                        addGalleryImage();
-                      }
-                    }}
-                    className="border p-2 w-full rounded mb-2"
-                    disabled={uploading}
-                  />
+     <input
+  type="file"
+  accept="image/*"
+  onChange={(e) => {
+    const file = e.target.files[0];
+    if (file) {
+      addGalleryImage(file); // pass file directly
+    }
+  }}
+  className="border p-2 w-full rounded mb-2"
+  disabled={uploading}
+/>
 
                   <div className="grid grid-cols-3 gap-2 mt-2">
                     {form.galleryImages.map((img, i) => (
