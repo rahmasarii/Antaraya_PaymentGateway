@@ -46,6 +46,17 @@ export default function AdminDashboard() {
     updateChartData();
   }, [selectedChart, daily, weekly, monthly, currentIndex]);
 
+  // Fungsi untuk menapilkan total pendapatan
+  const totalRevenue = transactions.checkout.reduce(
+    (sum, c) => sum + (c.total || 0),
+    0
+  );
+
+  const totalProductsSold = transactions.checkout.reduce(
+    (sum, c) => sum + c.items.reduce((s, item) => s + item.qty, 0),
+    0
+  );
+
   const handleLogout = async () => {
     await fetch("/api/admin/logout", { method: "POST" });
     window.location.href = "/login";
@@ -166,18 +177,20 @@ export default function AdminDashboard() {
         {/* Earnings Summary */}
         <div className={styles['earnings-summary']}>
           <div className={styles['earnings-card']}>
-            <h3>Net Income</h3>
-            <p className={styles['earnings-amount']}>$23,289</p>
+            <h3>Total Pendapatan</h3>
+            <p className={styles['earnings-amount']}>
+              Rp {totalRevenue.toLocaleString("id-ID")}
+            </p>
           </div>
+
           <div className={styles['earnings-card']}>
-            <h3>Withdrawn</h3>
-            <p className={styles['earnings-amount']}>$11,289</p>
-          </div>
-          <div className={styles['earnings-card']}>
-            <h3>Pending</h3>
-            <p className={styles['earnings-amount']}>$9,289</p>
+            <h3>Total Produk Terjual</h3>
+            <p className={styles['earnings-amount']}>
+              {totalProductsSold.toLocaleString("id-ID")} pcs
+            </p>
           </div>
         </div>
+
 
         <div className={styles['dashboard-content']}>
           {/* Chart Container */}

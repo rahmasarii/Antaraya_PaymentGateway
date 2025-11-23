@@ -2,6 +2,7 @@
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import AdminNavbar from "@/components/AdminNavbar";
+
 import styles from "@/styles/AdminProducts.module.css";
 
 export default function AdminProducts() {
@@ -10,6 +11,10 @@ export default function AdminProducts() {
 
   // Modal tambah produk
   const [showAddModal, setShowAddModal] = useState(false);
+
+  // Delete confirmation modal pop up
+  const [deleteId, setDeleteId] = useState(null);
+
 
   // FORM STATE
   const [form, setForm] = useState({
@@ -27,7 +32,7 @@ export default function AdminProducts() {
 
   // EDIT MODAL STATE
   const [editProduct, setEditProduct] = useState(null);
-const [editColorInput, setEditColorInput] = useState({ colorName: "", image: "" });
+  const [editColorInput, setEditColorInput] = useState({ colorName: "", image: "" });
 
 
   // REF → untuk auto scroll ke edit modal
@@ -160,12 +165,12 @@ const [editColorInput, setEditColorInput] = useState({ colorName: "", image: "" 
     });
 
   // ADD GALLERY (ADD FORM) – URL atau File
- const addGalleryImage = async (file) => {
-  if (!file) return alert("Gambar belum dimasukkan!");
+  const addGalleryImage = async (file) => {
+    if (!file) return alert("Gambar belum dimasukkan!");
 
-  // upload langsung
-  await handleFileUpload(file, "gallery");
-};
+    // upload langsung
+    await handleFileUpload(file, "gallery");
+  };
 
   const removeGalleryImage = (i) =>
     setForm({
@@ -292,7 +297,7 @@ const [editColorInput, setEditColorInput] = useState({ colorName: "", image: "" 
                     <button
                       type="button"
                       className={`${styles["action-btn"]} ${styles["action-delete"]}`}
-                      onClick={() => handleDelete(p._id)}
+                      onClick={() => setDeleteId(p._id)}
                       style={{ marginLeft: "6px" }}
                     >
                       Delete
@@ -306,50 +311,57 @@ const [editColorInput, setEditColorInput] = useState({ colorName: "", image: "" 
 
         {/* ADD PRODUCT MODAL */}
         {showAddModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-            <div className="bg-white p-6 rounded w-full max-w-lg max-h-[90vh] overflow-auto">
-              <h2 className="text-xl font-bold mb-4">Add New Product</h2>
+          <div className={styles.modalOverlay}>
+            <div className={styles.modalBox}>
+              <h2 className={styles.modalTitle}>Add New Product</h2>
 
-              <form onSubmit={handleSubmit} className="space-y-3">
-                <input
-                  name="name"
-                  value={form.name}
-                  onChange={handleChange}
-                  placeholder="Product Name"
-                  className="border p-2 w-full rounded"
-                  required
-                />
+              <form onSubmit={handleSubmit}>
+                {/* NAME */}
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>Product Name</label>
+                  <input
+                    name="name"
+                    value={form.name}
+                    onChange={handleChange}
+                    className={styles.formInput}
+                    required
+                  />
+                </div>
 
-                <input
-                  name="price"
-                  type="number"
-                  value={form.price}
-                  onChange={handleChange}
-                  placeholder="Price"
-                  className="border p-2 w-full rounded"
-                  required
-                />
+                {/* PRICE */}
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>Price</label>
+                  <input
+                    name="price"
+                    type="number"
+                    value={form.price}
+                    onChange={handleChange}
+                    className={styles.formInput}
+                    required
+                  />
+                </div>
 
-                <textarea
-                  name="description"
-                  value={form.description}
-                  onChange={handleChange}
-                  placeholder="Description"
-                  className="border p-2 w-full rounded"
-                />
+                {/* DESCRIPTION */}
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>Description</label>
+                  <textarea
+                    name="description"
+                    value={form.description}
+                    onChange={handleChange}
+                    className={styles.formTextarea}
+                  />
+                </div>
 
                 {/* DISPLAY IMAGE */}
-                <div className="border p-3 rounded">
-                  <h3 className="font-semibold mb-2">Display Image</h3>
-
+                <div className={styles.sectionBox}>
+                  <h3 className={styles.sectionTitle}>Display Image</h3>
                   <input
                     name="displayImage"
                     value={form.displayImage}
                     onChange={handleChange}
-                    placeholder="Or enter image URL"
-                    className="border p-2 w-full rounded mb-2"
+                    placeholder="Enter image URL"
+                    className={styles.formInput}
                   />
-
                   <input
                     type="file"
                     accept="image/*"
@@ -357,32 +369,20 @@ const [editColorInput, setEditColorInput] = useState({ colorName: "", image: "" 
                       const file = e.target.files[0];
                       if (file) handleFileUpload(file, "display");
                     }}
-                    className="border p-2 w-full rounded"
+                    className={styles.formInput}
                     disabled={uploading}
                   />
-
-                  {form.displayImage && (
-                    <div className="mt-2">
-                      <img
-                        src={form.displayImage}
-                        className="object-cover rounded border mt-1"
-                        style={{ width: "32px", height: "32px" }}
-                        alt="Preview"
-                      />
-                    </div>
-                  )}
                 </div>
 
                 {/* GALLERY IMAGES */}
-                <div className="border p-3 rounded">
-                  <h3 className="font-semibold mb-2">Gallery Images</h3>
-
-                  <div className="flex gap-2 mb-2">
+                <div className={styles.sectionBox}>
+                  <h3 className={styles.sectionTitle}>Gallery Images</h3>
+                  <div style={{ display: "flex", gap: "8px" }}>
                     <input
                       value={galleryInput}
                       onChange={(e) => setGalleryInput(e.target.value)}
                       placeholder="Image URL"
-                      className="border p-2 flex-1 rounded"
+                      className={styles.formInput}
                     />
                     <button
                       type="button"
@@ -393,33 +393,46 @@ const [editColorInput, setEditColorInput] = useState({ colorName: "", image: "" 
                       Add URL
                     </button>
                   </div>
-
-     <input
-  type="file"
-  accept="image/*"
-  onChange={(e) => {
-    const file = e.target.files[0];
-    if (file) {
-      addGalleryImage(file); // pass file directly
-    }
-  }}
-  className="border p-2 w-full rounded mb-2"
-  disabled={uploading}
-/>
-
-                  <div className="grid grid-cols-3 gap-2 mt-2">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) addGalleryImage(file);
+                    }}
+                    className={styles.formInput}
+                    disabled={uploading}
+                  />
+                  {/* PREVIEW GALLERY */}
+                  <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginTop: "8px" }}>
                     {form.galleryImages.map((img, i) => (
-                      <div key={i} className="relative border rounded">
+                      <div key={i} style={{ position: "relative" }}>
                         <img
                           src={img}
-                          alt={`Gallery ${i}`}
-                          className="h-20 w-full object-cover rounded"
-                          style={{ width: "32px", height: "32px" }}
+                          style={{
+                            width: "38px",
+                            height: "38px",
+                            objectFit: "cover",
+                            borderRadius: "5px",
+                            border: "1px solid #ccc",
+                          }}
                         />
                         <button
                           type="button"
                           onClick={() => removeGalleryImage(i)}
-                          className="absolute top-0 right-0 bg-red-600 text-white w-6 h-6 rounded-full"
+                          style={{
+                            position: "absolute",
+                            top: "-6px",
+                            right: "-6px",
+                            width: "18px",
+                            height: "18px",
+                            borderRadius: "50%",
+                            background: "red",
+                            color: "white",
+                            border: "none",
+                            fontSize: "10px",
+                            cursor: "pointer",
+                          }}
                         >
                           ×
                         </button>
@@ -429,92 +442,82 @@ const [editColorInput, setEditColorInput] = useState({ colorName: "", image: "" 
                 </div>
 
                 {/* STATUS */}
-                <select
-                  name="status"
-                  value={form.status}
-                  onChange={handleChange}
-                  className="border p-2 w-full rounded"
-                >
-                  <option value="READY">READY</option>
-                  <option value="HABIS">HABIS</option>
-                </select>
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>Status</label>
+                  <select
+                    name="status"
+                    value={form.status}
+                    onChange={handleChange}
+                    className={styles.formSelect}
+                  >
+                    <option value="READY">READY</option>
+                    <option value="HABIS">HABIS</option>
+                  </select>
+                </div>
 
                 {/* COLORS */}
-                <div className="border p-3 rounded">
-                  <h3 className="font-semibold mb-2">Color Variants</h3>
-
-                  <div className="space-y-2 mb-2">
-                    <input
-                      value={colorInput.colorName}
-                      onChange={(e) =>
-                        setColorInput({
-                          ...colorInput,
-                          colorName: e.target.value,
-                        })
-                      }
-                      placeholder="Color Name"
-                      className="border p-2 w-full rounded"
-                    />
-
-                    <input
-                      value={colorInput.image}
-                      onChange={(e) =>
-                        setColorInput({
-                          ...colorInput,
-                          image: e.target.value,
-                        })
-                      }
-                      placeholder="Or enter color image URL"
-                      className="border p-2 w-full rounded"
-                    />
-
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => {
-                        const file = e.target.files[0];
-                        if (file) handleFileUpload(file, "color");
-                      }}
-                      className="border p-2 w-full rounded"
-                      disabled={uploading}
-                    />
-                    
-
-                    {colorInput.image && (
-                      <div className="mt-2">
-                        <img
-                          src={colorInput.image}
-                          alt="Color preview"
-                          className="h-16 w-16 object-cover rounded border"
-                          style={{ width: "32px", height: "32px" }}
-                        />
-                      </div>
-                    )}
-                  </div>
-
-                  
-
+                <div className={styles.sectionBox}>
+                  <h3 className={styles.sectionTitle}>Color Variants</h3>
+                  <input
+                    value={colorInput.colorName}
+                    onChange={(e) =>
+                      setColorInput({ ...colorInput, colorName: e.target.value })
+                    }
+                    placeholder="Color Name"
+                    className={styles.formInput}
+                  />
+                  <input
+                    value={colorInput.image}
+                    onChange={(e) =>
+                      setColorInput({ ...colorInput, image: e.target.value })
+                    }
+                    placeholder="Color Image URL"
+                    className={styles.formInput}
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) handleFileUpload(file, "color");
+                    }}
+                    className={styles.formInput}
+                    disabled={uploading}
+                  />
                   <button
                     type="button"
                     onClick={addColor}
-                    className="bg-green-600 text-white px-3 py-2 rounded w-full"
+                    className={styles.modalBtnPrimary}
+                    disabled={uploading}
                   >
                     Add Color Variant
                   </button>
 
-                  <div className="mt-2 space-y-2">
+                  {/* PREVIEW COLOR LIST */}
+                  <div style={{ marginTop: "8px" }}>
                     {form.colors.map((c, i) => (
                       <div
                         key={i}
-                        className="flex justify-between items-center border p-2 rounded"
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          borderRadius: "6px",
+                          marginBottom: "6px",
+                        }}
                       >
-                        <div className="flex items-center gap-2">
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                           {c.image && (
                             <img
                               src={c.image}
-                              alt={c.colorName}
-                              className="h-8 w-8 object-cover rounded"
-                              style={{ width: "32px", height: "32px" }}
+                              style={{
+                                width: "32px",
+                                height: "32px",
+                                borderRadius: "4px",
+                                objectFit: "cover",
+                              }}
                             />
                           )}
                           <span>{c.colorName}</span>
@@ -522,7 +525,13 @@ const [editColorInput, setEditColorInput] = useState({ colorName: "", image: "" 
                         <button
                           type="button"
                           onClick={() => removeColor(i)}
-                          className="text-red-600"
+                          style={{
+                            color: "red",
+                            border: "none",
+                            background: "transparent",
+                            fontSize: "16px",
+                            cursor: "pointer",
+                          }}
                         >
                           ×
                         </button>
@@ -533,17 +542,18 @@ const [editColorInput, setEditColorInput] = useState({ colorName: "", image: "" 
 
                 <button
                   type="submit"
-                  className="bg-blue-600 text-white px-4 py-2 rounded w-full"
+                  className={styles.modalBtnPrimary}
                   disabled={uploading}
                 >
                   {uploading ? "Uploading..." : "Add Product"}
                 </button>
               </form>
 
+
               <button
                 type="button"
                 onClick={() => setShowAddModal(false)}
-                className="mt-3 bg-gray-700 text-white w-full py-2 rounded"
+                className={styles.modalClose}
                 disabled={uploading}
               >
                 Close
@@ -552,55 +562,56 @@ const [editColorInput, setEditColorInput] = useState({ colorName: "", image: "" 
           </div>
         )}
 
-        {/* EDIT MODAL (tetap sama fungsinya) */}
+        {/* EDIT MODAL*/}
         {editProduct && (
-          <div
-            ref={editSectionRef}
-            className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
-          >
-            <div className="bg-white p-6 rounded w-full max-w-lg max-h-[90vh] overflow-auto">
-              <h2 className="text-xl font-bold mb-4">Edit Product</h2>
+          <div className={styles.modalOverlay}>
+            <div ref={editSectionRef} className={styles.modalBox}>
+              <h2 className={styles.modalTitle}>Edit Product</h2>
 
               {/* NAME */}
-              <input
-                className="border p-2 w-full mb-2 rounded"
-                value={editProduct.name}
-                onChange={(e) =>
-                  setEditProduct({ ...editProduct, name: e.target.value })
-                }
-                placeholder="Product Name"
-              />
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>Product Name</label>
+                <input
+                  value={editProduct.name}
+                  onChange={(e) =>
+                    setEditProduct({ ...editProduct, name: e.target.value })
+                  }
+                  className={styles.formInput}
+                />
+              </div>
 
               {/* PRICE */}
-              <input
-                type="number"
-                className="border p-2 w-full mb-2 rounded"
-                value={editProduct.price}
-                onChange={(e) =>
-                  setEditProduct({ ...editProduct, price: e.target.value })
-                }
-                placeholder="Price"
-              />
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>Price</label>
+                <input
+                  type="number"
+                  value={editProduct.price}
+                  onChange={(e) =>
+                    setEditProduct({ ...editProduct, price: e.target.value })
+                  }
+                  className={styles.formInput}
+                />
+              </div>
 
               {/* DESCRIPTION */}
-              <textarea
-                className="border p-2 w-full mb-2 rounded"
-                value={editProduct.description}
-                onChange={(e) =>
-                  setEditProduct({
-                    ...editProduct,
-                    description: e.target.value,
-                  })
-                }
-                placeholder="Description"
-              />
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>Description</label>
+                <textarea
+                  value={editProduct.description}
+                  onChange={(e) =>
+                    setEditProduct({
+                      ...editProduct,
+                      description: e.target.value,
+                    })
+                  }
+                  className={styles.formTextarea}
+                />
+              </div>
 
-              {/* DISPLAY IMAGE - UPLOAD OR URL */}
-              <div className="border p-3 rounded mb-2">
-                <h3 className="font-semibold mb-2">Display Image</h3>
-
+              {/* DISPLAY IMAGE */}
+              <div className={styles.sectionBox}>
+                <h3 className={styles.sectionTitle}>Display Image</h3>
                 <input
-                  className="border p-2 w-full rounded mb-2"
                   value={editProduct.displayImage}
                   onChange={(e) =>
                     setEditProduct({
@@ -608,9 +619,9 @@ const [editColorInput, setEditColorInput] = useState({ colorName: "", image: "" 
                       displayImage: e.target.value,
                     })
                   }
-                  placeholder="Display Image URL"
+                  className={styles.formInput}
+                  placeholder="Image URL"
                 />
-
                 <input
                   type="file"
                   accept="image/*"
@@ -618,302 +629,351 @@ const [editColorInput, setEditColorInput] = useState({ colorName: "", image: "" 
                     const file = e.target.files[0];
                     if (file) handleEditFileUpload(file, "display");
                   }}
-                  className="border p-2 w-full rounded"
+                  className={styles.formInput}
                   disabled={uploading}
                 />
-
                 {editProduct.displayImage && (
-                  <div className="mt-2">
-                    <img
-                      src={editProduct.displayImage}
-                      alt="Preview"
-                      className="h-20 object-cover rounded"
-                      style={{ width: "32px", height: "32px" }}
-                    />
-                  </div>
+                  <img
+                    src={editProduct.displayImage}
+                    style={{
+                      width: "38px",
+                      height: "38px",
+                      objectFit: "cover",
+                      borderRadius: "6px",
+                      border: "1px solid #ccc",
+                      marginTop: "6px",
+                    }}
+                  />
                 )}
               </div>
 
-              {/* GALLERY IMAGES */}
-              <h3 className="font-semibold mt-3">Gallery Images</h3>
+              {/* GALLERY */}
+              <div className={styles.sectionBox}>
+                <h3 className={styles.sectionTitle}>Gallery Images</h3>
 
-              <div className="flex gap-2 mb-2">
-                <input
-                  className="border p-2 w-full rounded"
-                  placeholder="New Image URL"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      if (!e.target.value) return;
+                {/* Add URL */}
+                <div style={{ display: "flex", gap: "8px", marginBottom: "8px" }}>
+                  <input
+                    placeholder="New Image URL"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        if (!e.target.value) return;
+                        setEditProduct({
+                          ...editProduct,
+                          galleryImages: [...editProduct.galleryImages, e.target.value],
+                        });
+                        e.target.value = "";
+                      }
+                    }}
+                    className={styles.formInput}
+                  />
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      const input = e.target.previousElementSibling;
+                      if (!input.value) return;
                       setEditProduct({
                         ...editProduct,
-                        galleryImages: [
-                          ...editProduct.galleryImages,
-                          e.target.value,
-                        ],
+                        galleryImages: [...editProduct.galleryImages, input.value],
                       });
-                      e.target.value = "";
-                    }
-                  }}
-                />
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    const input = e.target.previousElementSibling;
-                    if (!input.value) return;
-                    setEditProduct({
-                      ...editProduct,
-                      galleryImages: [
-                        ...editProduct.galleryImages,
-                        input.value,
-                      ],
-                    });
-                    input.value = "";
-                  }}
-                  className="bg-green-600 text-white px-3 rounded"
-                >
-                  Add URL
-                </button>
-              </div>
-
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files[0];
-                  if (file) handleEditFileUpload(file, "gallery");
-                }}
-                className="border p-2 w-full rounded mb-2"
-                disabled={uploading}
-              />
-
-              <div className="flex flex-wrap gap-3 mb-4">
-                {editProduct.galleryImages.map((img, i) => (
-                  <div
-                    key={i}
-                    className="relative border p-2 rounded w-28 text-center"
+                      input.value = "";
+                    }}
+                    className={styles.modalBtnPrimary}
                   >
-                    {img ? (
-                      <img
-                        src={img}
-                        className="w-24 h-24 object-cover rounded mx-auto mb-1"
-                        style={{ width: "32px", height: "32px" }}
-                        alt={`Gallery ${i}`}
-                      />
-                    ) : null}
-
-                    <input
-                      type="text"
-                      value={img}
-                      onChange={(e) => {
-                        const updated = [...editProduct.galleryImages];
-                        updated[i] = e.target.value;
-                        setEditProduct({
-                          ...editProduct,
-                          galleryImages: updated,
-                        });
-                      }}
-                      className="border rounded w-full p-1 text-xs"
-                      placeholder="Image URL"
-                    />
-
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => {
-                        const file = e.target.files[0];
-                        if (file) handleEditFileUpload(file, "gallery", i);
-                      }}
-                      className="border rounded w-full p-1 text-xs mt-1"
-                      disabled={uploading}
-                    />
-
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setEditProduct({
-                          ...editProduct,
-                          galleryImages: editProduct.galleryImages.filter(
-                            (_, idx) => idx !== i
-                          ),
-                        })
-                      }
-                      className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1"
-                    >
-                      x
-                    </button>
-                  </div>
-                ))}
-              </div>
-
-              {/* STATUS EDIT */}
-              <select
-                value={editProduct.status}
-                onChange={(e) =>
-                  setEditProduct({ ...editProduct, status: e.target.value })
-                }
-                className="border p-2 w-full rounded"
-              >
-                <option value="READY">READY</option>
-                <option value="HABIS">HABIS</option>
-              </select>
-
-              {/* COLORS EDIT */}
-              <h3 className="font-semibold mt-2">Colors</h3>
-
-              <div className="border p-3 rounded mb-2">
-                <h3 className="font-semibold mb-2">Add Color Variant</h3>
-
-                <div className="space-y-2 mb-2">
-                  <input
-                    placeholder="Color Name"
-                    className="border p-2 w-full rounded"
-                    id="colorNameInput"
-                  />
-
-                  <input
-                    placeholder="Color Image URL"
-                    className="border p-2 w-full rounded"
-                    id="colorImageInput"
-                  />
+                    Add URL
+                  </button>
                 </div>
 
-<input
-  type="file"
-  accept="image/*"
-  onChange={(e) => {
-    const file = e.target.files[0];
-    if (file) {
-      handleEditFileUpload(file, "colorTemp").then(url => {
-        if (url) {
-          setEditColorInput(prev => ({ ...prev, image: url }));
-        }
-      });
-    }
-  }}
-  className="border rounded w-full p-1 text-xs mt-1"
-  disabled={uploading}
-/>
+                {/* Upload new file */}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) handleEditFileUpload(file, "gallery");
+                  }}
+                  className={styles.formInput}
+                  disabled={uploading}
+                />
 
-{editColorInput.image && (
-  <img
-    src={editColorInput.image}
-    className="h-16 w-16 object-cover rounded border mt-2"
-                      style={{ width: "32px", height: "32px" }}
-                      alt={c.colorName}
-  />
-)}
+                {/* PREVIEW + EDIT EACH GALLERY */}
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginTop: "8px" }}>
+                  {editProduct.galleryImages.map((img, i) => (
+                    <div key={i} style={{ position: "relative", width: "82px", textAlign: "center" }}>
+                      {img && (
+                        <img
+                          src={img}
+                          style={{
+                            width: "38px",
+                            height: "38px",
+                            objectFit: "cover",
+                            borderRadius: "6px",
+                            border: "1px solid #ccc",
+                            margin: "0 auto 6px",
+                          }}
+                        />
+                      )}
+                      <input
+                        value={img}
+                        onChange={(e) => {
+                          const updated = [...editProduct.galleryImages];
+                          updated[i] = e.target.value;
+                          setEditProduct({ ...editProduct, galleryImages: updated });
+                        }}
+                        className={styles.formInput}
+                        placeholder="Image URL"
+                      />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          if (file) handleEditFileUpload(file, "gallery", i);
+                        }}
+                        className={styles.formInput}
+                        disabled={uploading}
+                      />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setEditProduct({
+                            ...editProduct,
+                            galleryImages: editProduct.galleryImages.filter((_, idx) => idx !== i),
+                          })
+                        }
+                        style={{
+                          position: "absolute",
+                          top: "-6px",
+                          right: "-6px",
+                          width: "18px",
+                          height: "18px",
+                          background: "red",
+                          color: "white",
+                          borderRadius: "50%",
+                          border: "none",
+                          cursor: "pointer",
+                          fontSize: "10px",
+                        }}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
+              {/* STATUS */}
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>Status</label>
+                <select
+                  value={editProduct.status}
+                  onChange={(e) =>
+                    setEditProduct({ ...editProduct, status: e.target.value })
+                  }
+                  className={styles.formSelect}
+                >
+                  <option value="READY">READY</option>
+                  <option value="HABIS">HABIS</option>
+                </select>
+              </div>
 
+              {/* COLORS */}
+              <div className={styles.sectionBox}>
+                <h3 className={styles.sectionTitle}>Color Variants</h3>
+
+                {/* Add new color */}
+                <input
+                  placeholder="Color Name"
+                  className={styles.formInput}
+                  id="colorNameInput"
+                />
+                <input
+                  placeholder="Color Image URL"
+                  className={styles.formInput}
+                  id="colorImageInput"
+                />
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      handleEditFileUpload(file, "colorTemp").then((url) => {
+                        if (url) setEditColorInput({ ...editColorInput, image: url });
+                      });
+                    }
+                  }}
+                  className={styles.formInput}
+                  disabled={uploading}
+                />
+                {editColorInput.image && (
+                  <img
+                    src={editColorInput.image}
+                    style={{
+                      width: "38px",
+                      height: "38px",
+                      objectFit: "cover",
+                      borderRadius: "6px",
+                      border: "1px solid #ccc",
+                      marginTop: "6px",
+                    }}
+                  />
+                )}
 
                 <button
                   type="button"
-                onClick={() => {
-  const name = document.getElementById("colorNameInput").value.trim();
-  if (!name) return alert("Color name is required!");
-
-  setEditProduct({
-    ...editProduct,
-    colors: [
-      ...editProduct.colors,
-      {
-        colorName: name,
-        image: editColorInput.image,
-      }
-    ]
-  });
-
-  setEditColorInput({ colorName: "", image: "" });
-}}
-                  className="bg-green-600 text-white px-3 py-2 rounded w-full"
+                  onClick={() => {
+                    const name = document.getElementById("colorNameInput").value.trim();
+                    if (!name) return alert("Color name required!");
+                    setEditProduct({
+                      ...editProduct,
+                      colors: [
+                        ...editProduct.colors,
+                        { colorName: name, image: editColorInput.image },
+                      ],
+                    });
+                    setEditColorInput({ colorName: "", image: "" });
+                  }}
+                  className={styles.modalBtnPrimary}
                 >
                   Add Color Variant
                 </button>
+
+                {/* Color list */}
+                <div style={{ marginTop: "8px", display: "flex", flexWrap: "wrap", gap: "8px" }}>
+                  {editProduct.colors.map((c, i) => (
+                    <div key={i} style={{ width: "88px", border: "1px solid #ccc", borderRadius: "6px", padding: "6px", position: "relative", textAlign: "center" }}>
+                      <img
+                        src={c.image || "/no-image.png"}
+                        style={{
+                          width: "38px",
+                          height: "38px",
+                          objectFit: "cover",
+                          borderRadius: "5px",
+                          marginBottom: "4px",
+                        }}
+                      />
+                      <input
+                        className={styles.formInput}
+                        value={c.colorName}
+                        onChange={(e) => {
+                          const updated = [...editProduct.colors];
+                          updated[i].colorName = e.target.value;
+                          setEditProduct({ ...editProduct, colors: updated });
+                        }}
+                        placeholder="Color Name"
+                      />
+                      <input
+                        className={styles.formInput}
+                        value={c.image}
+                        placeholder="Image URL"
+                        onChange={(e) => {
+                          const updated = [...editProduct.colors];
+                          updated[i].image = e.target.value;
+                          setEditProduct({ ...editProduct, colors: updated });
+                        }}
+                      />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          if (file) handleEditFileUpload(file, "color", i);
+                        }}
+                        className={styles.formInput}
+                        disabled={uploading}
+                      />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setEditProduct({
+                            ...editProduct,
+                            colors: editProduct.colors.filter((_, idx) => idx !== i),
+                          })
+                        }
+                        style={{
+                          position: "absolute",
+                          top: "-6px",
+                          right: "-6px",
+                          width: "18px",
+                          height: "18px",
+                          background: "red",
+                          color: "white",
+                          borderRadius: "50%",
+                          border: "none",
+                          cursor: "pointer",
+                          fontSize: "10px",
+                        }}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              <div className="flex flex-wrap gap-2">
-                {editProduct.colors.map((c, i) => (
-                  <div
-                    key={i}
-                    className="border p-2 rounded text-center relative w-32"
-                  >
-                    <img
-                      src={c.image || "/no-image.png"}
-                      className="object-cover rounded mx-auto mb-1 bg-gray-200"
-                      style={{ width: "32px", height: "32px" }}
-                      alt={c.colorName}
-                    />
-
-                    <input
-                      className="border p-1 w-full text-xs rounded mb-1"
-                      value={c.colorName}
-                      onChange={(e) => {
-                        const newColors = [...editProduct.colors];
-                        newColors[i].colorName = e.target.value;
-                        setEditProduct({ ...editProduct, colors: newColors });
-                      }}
-                      placeholder="Color Name"
-                    />
-
-                    <input
-                      className="border p-1 w-full text-xs rounded mb-1"
-                      value={c.image}
-                      placeholder="Image URL"
-                      onChange={(e) => {
-                        const newColors = [...editProduct.colors];
-                        newColors[i].image = e.target.value;
-                        setEditProduct({ ...editProduct, colors: newColors });
-                      }}
-                    />
-
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => {
-                        const file = e.target.files[0];
-                        if (file) handleEditFileUpload(file, "color", i);
-                      }}
-                      className="border rounded w-full p-1 text-xs"
-                      disabled={uploading}
-                    />
-
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setEditProduct({
-                          ...editProduct,
-                          colors: editProduct.colors.filter(
-                            (_, idx) => idx !== i
-                          ),
-                        })
-                      }
-                      className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-1"
-                    >
-                      x
-                    </button>
-                  </div>
-                ))}
-              </div>
-
+              {/* SAVE BUTTON */}
               <button
                 type="button"
                 onClick={saveEdit}
-                className="mt-4 bg-blue-600 text-white w-full py-2 rounded"
+                className={styles.modalBtnPrimary}
                 disabled={uploading}
               >
-                {uploading ? "Uploading..." : "Save Changes"}
+                {uploading ? "Saving..." : "Save Changes"}
               </button>
 
+              {/* CLOSE */}
               <button
                 type="button"
                 onClick={() => setEditProduct(null)}
-                className="mt-2 bg-gray-700 text-white w-full py-2 rounded"
+                className={styles.modalClose}
               >
                 Close
               </button>
             </div>
           </div>
         )}
+
+        {/*DELET MODAL*/}
+        {deleteId && (
+          <div className={styles.modalOverlay}>
+            <div className={styles.modalBox}>
+              <h2 className={styles.modalTitle} style={{ textAlign: "center" }}>
+                Hapus Produk
+              </h2>
+
+              <p className={styles.deleteConfirmText}>
+                Anda yakin ingin menghapus produk?
+              </p>
+
+              <button
+                type="button"
+                className={styles.deleteBtn}
+                onClick={async () => {
+                  try {
+                    await axios.delete("/api/products", { data: { id: deleteId } });
+                    fetchProducts();
+                    setDeleteId(null);
+                  } catch (err) {
+                    alert("Gagal menghapus produk");
+                  }
+                }}
+              >
+                Ya, hapus produk
+              </button>
+
+              <button
+                type="button"
+                className={styles.modalClose}
+                onClick={() => setDeleteId(null)}
+              >
+                Batal
+              </button>
+            </div>
+          </div>
+        )}
+
       </div>
     </>
   );
