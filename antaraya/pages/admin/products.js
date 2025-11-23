@@ -27,6 +27,8 @@ export default function AdminProducts() {
 
   // EDIT MODAL STATE
   const [editProduct, setEditProduct] = useState(null);
+const [editColorInput, setEditColorInput] = useState({ colorName: "", image: "" });
+
 
   // REF → untuk auto scroll ke edit modal
   const editSectionRef = useRef(null);
@@ -158,19 +160,12 @@ export default function AdminProducts() {
     });
 
   // ADD GALLERY (ADD FORM) – URL atau File
-  const addGalleryImage = async () => {
-    if (!galleryInput) return alert("URL wajib!");
+ const addGalleryImage = async (file) => {
+  if (!file) return alert("Gambar belum dimasukkan!");
 
-    if (galleryInput instanceof File) {
-      await handleFileUpload(galleryInput, "gallery");
-    } else {
-      setForm({
-        ...form,
-        galleryImages: [...form.galleryImages, galleryInput],
-      });
-      setGalleryInput("");
-    }
-  };
+  // upload langsung
+  await handleFileUpload(file, "gallery");
+};
 
   const removeGalleryImage = (i) =>
     setForm({
@@ -399,19 +394,18 @@ export default function AdminProducts() {
                     </button>
                   </div>
 
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files[0];
-                      if (file) {
-                        setGalleryInput(file);
-                        addGalleryImage();
-                      }
-                    }}
-                    className="border p-2 w-full rounded mb-2"
-                    disabled={uploading}
-                  />
+     <input
+  type="file"
+  accept="image/*"
+  onChange={(e) => {
+    const file = e.target.files[0];
+    if (file) {
+      addGalleryImage(file); // pass file directly
+    }
+  }}
+  className="border p-2 w-full rounded mb-2"
+  disabled={uploading}
+/>
 
                   <div className="grid grid-cols-3 gap-2 mt-2">
                     {form.galleryImages.map((img, i) => (
@@ -484,6 +478,7 @@ export default function AdminProducts() {
                       className="border p-2 w-full rounded"
                       disabled={uploading}
                     />
+                    
 
                     {colorInput.image && (
                       <div className="mt-2">
@@ -496,6 +491,8 @@ export default function AdminProducts() {
                       </div>
                     )}
                   </div>
+
+                  
 
                   <button
                     type="button"
@@ -781,31 +778,53 @@ export default function AdminProducts() {
                   />
                 </div>
 
+<input
+  type="file"
+  accept="image/*"
+  onChange={(e) => {
+    const file = e.target.files[0];
+    if (file) {
+      handleEditFileUpload(file, "colorTemp").then(url => {
+        if (url) {
+          setEditColorInput(prev => ({ ...prev, image: url }));
+        }
+      });
+    }
+  }}
+  className="border rounded w-full p-1 text-xs mt-1"
+  disabled={uploading}
+/>
+
+{editColorInput.image && (
+  <img
+    src={editColorInput.image}
+    className="h-16 w-16 object-cover rounded border mt-2"
+                      style={{ width: "32px", height: "32px" }}
+                      alt={c.colorName}
+  />
+)}
+
+
+
                 <button
                   type="button"
-                  onClick={() => {
-                    const nameInput =
-                      document.getElementById("colorNameInput");
-                    const imageInput =
-                      document.getElementById("colorImageInput");
-                    const colorName = nameInput.value.trim();
+                onClick={() => {
+  const name = document.getElementById("colorNameInput").value.trim();
+  if (!name) return alert("Color name is required!");
 
-                    if (!colorName) return alert("Color name is required!");
+  setEditProduct({
+    ...editProduct,
+    colors: [
+      ...editProduct.colors,
+      {
+        colorName: name,
+        image: editColorInput.image,
+      }
+    ]
+  });
 
-                    setEditProduct({
-                      ...editProduct,
-                      colors: [
-                        ...editProduct.colors,
-                        {
-                          colorName,
-                          image: imageInput.value,
-                        },
-                      ],
-                    });
-
-                    nameInput.value = "";
-                    imageInput.value = "";
-                  }}
+  setEditColorInput({ colorName: "", image: "" });
+}}
                   className="bg-green-600 text-white px-3 py-2 rounded w-full"
                 >
                   Add Color Variant
