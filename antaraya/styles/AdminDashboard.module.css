@@ -118,17 +118,18 @@
 
 /* Chart Wrapper */
 .chart-wrapper {
+  position: relative;
+  width: 100%;
+  height: 380px; /* default desktop */
   display: flex;
   align-items: center;
-  position: relative;
-  gap: 10px;
-  width: 100%;
+  justify-content: center;
 }
 
 .chart-area {
-  flex: 1;
-  height: 300px;
-  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
 }
 
 .scroll-btn {
@@ -145,6 +146,10 @@
   font-weight: bold;
   transition: all 0.2s ease;
   color: #495057;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
 }
 
 .scroll-btn:hover:not(:disabled) {
@@ -159,11 +164,11 @@
 }
 
 .scroll-btn.left {
-  order: 1;
+  left: 10px;
 }
 
 .scroll-btn.right {
-  order: 3;
+  right: 10px;
 }
 
 /* Transactions Container */
@@ -294,7 +299,7 @@
   }
   
   .chart-area {
-    height: 250px;
+    height: 100%;
   }
   
   .chart-wrapper {
@@ -335,7 +340,7 @@
   }
   
   .chart-area {
-    height: 200px;
+    height: 100%;
   }
   
   .earnings-card h3 {

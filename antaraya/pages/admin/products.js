@@ -245,7 +245,7 @@ export default function AdminProducts() {
       <div className={styles.productsPage}>
         {/* HEADER: Title + tombol Add */}
         <div className={styles.headerRow}>
-          <h1 className={styles.productsTitle}>🛍️ Admin Products</h1>
+          <h1 className={styles.productsTitle}>Admin Products</h1>
           <button
             type="button"
             className={`${styles["action-btn"]} ${styles["action-edit"]} ${styles.addButton}`}

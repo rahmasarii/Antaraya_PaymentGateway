@@ -283,7 +283,7 @@ export default function AdminDashboard() {
 
           {/* Transactions Container */}
           <section className={styles['transactions-container']}>
-            <h2>🧾 Riwayat Transaksi</h2>
+            <h2>Riwayat Transaksi</h2>
             
             <div className={styles['table-wrapper']}>
               <table className={styles['transactions-table']}>
