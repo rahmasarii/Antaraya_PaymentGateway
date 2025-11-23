@@ -1,0 +1,136 @@
+.footer {
+  background-color: #1a1a1a;
+  color: #f3f2f2;
+  padding: 1.5rem 0.5rem;
+  margin-top: auto;
+}
+
+/* Agar .container di footer sama seperti global.css */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* BAGIAN ATAS FOOTER */
+.footerContent {
+  display: grid;
+  margin-top: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.footerSection {
+  padding: 0rem 3rem;
+}
+
+.footerSection h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  letter-spacing: 1px;
+}
+
+.footerSection p {
+  color: #9ca3af;
+  line-height: 1.8;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* BRAND LOGOS */
+.footerBrands {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  padding: 2rem 0;
+  align-items: center;
+}
+
+.brandLogoItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brandLogoItem img {
+  max-width: 100%;
+  height: auto;
+  max-height: 65px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+  transition: all 0.3s ease;
+}
+
+/* SOCIAL LINKS */
+.socialLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.socialLink {
+  color: #9ca3af;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.socialLink:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+/*COPY NUMBER*/
+.copyNumber {
+  cursor: pointer;
+  position: relative;
+  color: #9ca3af;
+  transition: color 0.2s ease;
+}
+
+.copyNumber:hover {
+  color: white;
+}
+
+/* Tooltip “Salin nomor telepon” */
+.copyNumber:hover::after {
+  content: "Salin nomor telepon";
+  position: absolute;
+  left: 0;
+  bottom: -20px;
+  background: #000;
+  padding: 4px 8px;
+  font-size: 12px;
+  color: #fff;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0.9;
+  z-index: 10;
+}
+
+/* COPYRIGHT */
+.footerBottom {
+  border-top: 1px solid #374151;
+  padding-top: 1.5rem;
+  text-align: center;
+  color: #9ca3af;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .footerContent {
+    grid-template-columns: 1fr;
+  }
+
+  .footerBrands {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .footerBrands {
+    grid-template-columns: 1fr;
+  }
+}

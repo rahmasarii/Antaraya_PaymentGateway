@@ -2,7 +2,7 @@
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import AdminNavbar from "@/components/AdminNavbar";
-
+import AdminFooter from "@/components/Footer";
 import styles from "@/styles/AdminProducts.module.css";
 
 export default function AdminProducts() {

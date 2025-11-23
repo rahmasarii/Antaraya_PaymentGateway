@@ -6,7 +6,7 @@ export default function HomePage() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [cartItemCount, setCartItemCount] = useState(0);
-  
+
   // Contact form state
   const [contactForm, setContactForm] = useState({
     name: "",
@@ -82,8 +82,8 @@ export default function HomePage() {
       <nav className="navbar">
         <div className="navbar-container">
           <div className="navbar-logo">
-            <img 
-              src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/2c7a0a58-e2d7-4e3b-99cb-7187e398953d/Logo+Putih+Transparent+Antaraya+Original.png?format=1500w" 
+            <img
+              src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/2c7a0a58-e2d7-4e3b-99cb-7187e398953d/Logo+Putih+Transparent+Antaraya+Original.png?format=1500w"
               alt="Antaraya Logo"
               onClick={() => router.push('/')}
             />
@@ -100,20 +100,20 @@ export default function HomePage() {
             </button>
           </div>
           <div className="navbar-cart" onClick={() => router.push('/checkout')}>
-            <svg 
-              width="28" 
-              height="28" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
-              strokeWidth="2" 
-              strokeLinecap="round" 
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
               strokeLinejoin="round"
               className="cart-icon"
             >
-              <circle cx="9" cy="21" r="1"/>
-              <circle cx="20" cy="21" r="1"/>
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+              <circle cx="9" cy="21" r="1" />
+              <circle cx="20" cy="21" r="1" />
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
             </svg>
             {cartItemCount > 0 && (
               <span className="cart-badge">{cartItemCount}</span>
@@ -123,14 +123,14 @@ export default function HomePage() {
       </nav>
 
       <button
-  onClick={() => window.open("https://wa.me/6281296135571", "_blank")}
-  className="whatsapp-floating-btn"
->
-  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
-</button>
+        onClick={() => window.open("https://wa.me/6281296135571", "_blank")}
+        className="whatsapp-floating-btn"
+      >
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
+      </button>
 
       {/* Hero Section */}
-      <section 
+      <section
         className="hero-section-home"
         style={{
           backgroundImage: 'url(https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/4aeceed3-c6b0-40d1-8234-6ec082d974c9/openart-image_SvCkyGSD_1753133761178_raw+%281%29.jpg)',
@@ -152,20 +152,20 @@ export default function HomePage() {
           bottom: 0,
           backgroundColor: 'rgba(0, 0, 0, 0.4)'
         }} />
-        
+
         <div className="hero-content" style={{ position: 'relative', zIndex: 1, textAlign: 'center', color: 'white' }}>
-          <h1 style={{ 
-            fontSize: '4rem', 
-            fontWeight: '800', 
+          <h1 style={{
+            fontSize: '4rem',
+            fontWeight: '800',
             marginBottom: '1.5rem',
             letterSpacing: '-1px',
             textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
           }}>
             Discover The Full Detail Of Your Music
           </h1>
-          <p style={{ 
-            fontSize: '1.75rem', 
-            fontWeight: '300', 
+          <p style={{
+            fontSize: '1.75rem',
+            fontWeight: '300',
             marginBottom: '2rem',
             textShadow: '1px 1px 2px rgba(0,0,0,0.3)'
           }}>
@@ -277,25 +277,25 @@ export default function HomePage() {
             </div>
             <div className="courier-logos">
               <div className="courier-logo-item">
-                <img 
+                <img
                   src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/0fc15baf-e243-4e82-98bd-47c1fce3c37d/0+J%26T+Express.png?format=500w"
                   alt="J&T Express"
                 />
               </div>
               <div className="courier-logo-item">
-                <img 
+                <img
                   src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/788b542d-bc89-462f-bb47-d2465b0ccfaa/0+JNE+Express.png?format=500w"
                   alt="JNE Express"
                 />
               </div>
               <div className="courier-logo-item">
-                <img 
+                <img
                   src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/4b78bf57-295d-4e7b-a137-4565eb47bf59/0+SiCepat+2.png?format=500w"
                   alt="SiCepat"
                 />
               </div>
               <div className="courier-logo-item">
-                <img 
+                <img
                   src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/1856b44a-844f-43b4-bcff-708f9520a5a0/0+Gosend+Gojek.png?format=750w"
                   alt="GoSend"
                 />
@@ -312,7 +312,7 @@ export default function HomePage() {
             <div className="contact-info">
               <h2 className="contact-title">Untuk Kebutuhan Bisnis Anda.</h2>
             </div>
-            
+
             <div className="contact-form-wrapper">
               <form onSubmit={handleContactSubmit} className="contact-form">
                 <div className="form-group">
@@ -360,65 +360,65 @@ export default function HomePage() {
       </section>
 
       {/* Peluang Bisnis Section */}
-<section className="business-opportunity-section">
-  <div className="container business-opportunity-container">
-    <div className="business-left image-grid">
-  <a href="https://www.instagram.com/p/DOfUUGAAYmZ/" target="_blank">
-    <img src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/1760054444247-1XQ0XHVL829G6V275N0T/image-asset.jpeg?format=500w" />
-  </a>
+      <section className="business-opportunity-section">
+        <div className="container business-opportunity-container">
+          <div className="business-left image-grid">
+            <a href="https://www.instagram.com/p/DOfUUGAAYmZ/" target="_blank">
+              <img src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/1760054444247-1XQ0XHVL829G6V275N0T/image-asset.jpeg?format=500w" />
+            </a>
 
-  <a href="https://www.instagram.com/p/DOfURnEAaFn/" target="_blank">
-    <img src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/1760054445057-IZE5D4LLACIYRKTGGX6J/image-asset.jpeg?format=500w" />
-  </a>
+            <a href="https://www.instagram.com/p/DOfURnEAaFn/" target="_blank">
+              <img src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/1760054445057-IZE5D4LLACIYRKTGGX6J/image-asset.jpeg?format=500w" />
+            </a>
 
-  <a href="https://www.instagram.com/p/DOfUHemgVtS/" target="_blank">
-    <img src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/1760054445799-5GWI33Q2BDHQE7MCALFA/image-asset.jpeg?format=500w" />
-  </a>
+            <a href="https://www.instagram.com/p/DOfUHemgVtS/" target="_blank">
+              <img src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/1760054445799-5GWI33Q2BDHQE7MCALFA/image-asset.jpeg?format=500w" />
+            </a>
 
-  <a href="https://www.instagram.com/p/DMasmH5B2WJ/" target="_blank">
-    <img src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/1760054446582-EPTMHZHTR9TT5LRHL4T1/image-asset.jpeg?format=500w" />
-  </a>
+            <a href="https://www.instagram.com/p/DMasmH5B2WJ/" target="_blank">
+              <img src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/1760054446582-EPTMHZHTR9TT5LRHL4T1/image-asset.jpeg?format=500w" />
+            </a>
 
-  <a href="https://www.instagram.com/p/DMasj1SBaLl/" target="_blank">
-    <img src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/1760054447311-QUW45OTEVFDYYHU180MA/image-asset.jpeg?format=500w" />
-  </a>
+            <a href="https://www.instagram.com/p/DMasj1SBaLl/" target="_blank">
+              <img src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/1760054447311-QUW45OTEVFDYYHU180MA/image-asset.jpeg?format=500w" />
+            </a>
 
-  <a href="https://www.instagram.com/p/DMasgM7Ba1u/" target="_blank">
-    <img src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/1760054448024-RFXN8HRM7MQN58UZC3YT/image-asset.jpeg?format=500w" />
-  </a>
-</div>
+            <a href="https://www.instagram.com/p/DMasgM7Ba1u/" target="_blank">
+              <img src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/1760054448024-RFXN8HRM7MQN58UZC3YT/image-asset.jpeg?format=500w" />
+            </a>
+          </div>
 
 
 
-    <div className="business-right">
-      <h2 className="business-title">Peluang Bisnis<br/>Di Antaraya !</h2>
-      
-      <p className="business-subtitle">
-        Dapatkan komisi pertama anda dengan hanya menjual 1 produk pertama anda.
-      </p>
+          <div className="business-right">
+            <h2 className="business-title">Peluang Bisnis<br />Di Antaraya !</h2>
 
-      <p className="business-desc">
-        Kami membuka kesempatan untuk anda yang berminat menjadi :
-      </p>
+            <p className="business-subtitle">
+              Dapatkan komisi pertama anda dengan hanya menjual 1 produk pertama anda.
+            </p>
 
-      <ul className="business-list">
-        <li>• Reseller</li>
-        <li>• Affiliate</li>
-        <li>• Dropshipper</li>
-      </ul>
+            <p className="business-desc">
+              Kami membuka kesempatan untuk anda yang berminat menjadi :
+            </p>
+
+            <ul className="business-list">
+              <li>• Reseller</li>
+              <li>• Affiliate</li>
+              <li>• Dropshipper</li>
+            </ul>
             <button
               onClick={() => router.push('/')}
               className="business-button"
             >
               SAYA TERTARIK!
             </button>
-    </div>
-  </div>
-</section>
+          </div>
+        </div>
+      </section>
 
 
       {/* Footer */}
-      <footer className="footer">
+      {/* <footer className="footer">
         <div className="container">
 
 
@@ -445,9 +445,8 @@ export default function HomePage() {
             </div>
           </div>
 
-
           {/* Brand Logos Section */}
-          <div className="footer-brands">
+          {/* <div className="footer-brands">
             <div className="brand-logo-item">
               <img
                 src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/b06286ba-ff07-4798-b70d-548e404c6c24/Long+normal+26x7.5.png?format=750w"
@@ -472,14 +471,14 @@ export default function HomePage() {
                 alt="Single Bean"
               />
             </div>
-          </div>
+          </div> */}
 
 
-          <div className="footer-bottom">
+          {/* <div className="footer-bottom">
             <p>© 2024 Antaraya. All rights reserved.</p>
           </div>
         </div>
-      </footer>
+      </footer> */}
     </div>
   );
 }
