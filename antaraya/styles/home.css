@@ -35,7 +35,7 @@
 
 /* Featured Products Section */
 .featured-products-section {
-  padding: 5rem 0;
+  padding: 3rem 0;
   background: linear-gradient(to bottom, #f9fafb 0%, #ffffff 100%);
 }
 
@@ -89,7 +89,6 @@
 /* Products Grid - 4 items */
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
   gap: 2.5rem;
   animation: fadeIn 0.8s ease-out 0.2s both;
 }
@@ -507,7 +506,6 @@
 /* ===== RESPONSIVE STYLES ===== */
 @media (max-width: 1200px) {
   .products-grid {
-    grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
   }
 
@@ -548,7 +546,6 @@
   }
 
   .products-grid {
-    grid-template-columns: repeat(2, 1fr);
     gap: 1.25rem;
   }
 
@@ -625,10 +622,6 @@
   
   .section-title {
     font-size: 1.75rem;
-  }
-
-  .products-grid {
-    grid-template-columns: 1fr;
   }
 
   .shipping-content {

@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Navbar from '../components/Navbar';
 
 export default function HomePage() {
   const router = useRouter();
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [cartItemCount, setCartItemCount] = useState(0);
-
+  const [itemsToShow, setItemsToShow] = useState(4); // default desktop
+  
   // Contact form state
   const [contactForm, setContactForm] = useState({
     name: "",
@@ -17,26 +18,54 @@ export default function HomePage() {
 
   useEffect(() => {
     fetchFeaturedProducts();
-    updateCartCount();
   }, []);
 
-  const updateCartCount = () => {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const totalItems = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
-    setCartItemCount(totalItems);
-  };
+  // Responsif: ubah itemsToShow berdasarkan lebar layar
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const updateItemsToShow = () => {
+      const width = window.innerWidth;
+
+         if (width <= 710) {
+        // Mobile: 2 kolom
+        setItemsToShow(4);
+      } else if (width <= 1024) {
+        // iPad / tablet: 3 kolom -> pakai kelipatan 3
+        setItemsToShow(3);
+      } else {
+        // Desktop: 4 kolom -> pakai kelipatan 4
+        setItemsToShow(4);
+      }
+
+    };
+
+    updateItemsToShow();
+    window.addEventListener('resize', updateItemsToShow);
+
+    return () => {
+      window.removeEventListener('resize', updateItemsToShow);
+    };
+  }, []);
 
   const fetchFeaturedProducts = async () => {
     try {
       const response = await fetch('/api/products');
       const data = await response.json();
-      setFeaturedProducts(data.slice(0, 4));
+      setFeaturedProducts(data.slice(0, itemsToShow));
     } catch (error) {
       console.error('Error fetching products:', error);
     } finally {
       setLoading(false);
     }
   };
+
+  // Update featured products ketika itemsToShow berubah
+  useEffect(() => {
+    if (featuredProducts.length > 0) {
+      fetchFeaturedProducts();
+    }
+  }, [itemsToShow]);
 
   const handleContactSubmit = async (e) => {
     e.preventDefault();
@@ -79,48 +108,7 @@ export default function HomePage() {
   return (
     <div className="main-container">
       {/* Navbar */}
-      <nav className="navbar">
-        <div className="navbar-container">
-          <div className="navbar-logo">
-            <img
-              src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/2c7a0a58-e2d7-4e3b-99cb-7187e398953d/Logo+Putih+Transparent+Antaraya+Original.png?format=1500w"
-              alt="Antaraya Logo"
-              onClick={() => router.push('/')}
-            />
-          </div>
-          <div className="navbar-menu">
-            <button onClick={() => router.push('/')} className="nav-link active">
-              Home
-            </button>
-            <button onClick={() => router.push('/shop')} className="nav-link">
-              Shop
-            </button>
-            <button onClick={() => router.push('/about')} className="nav-link">
-              About
-            </button>
-          </div>
-          <div className="navbar-cart" onClick={() => router.push('/checkout')}>
-            <svg
-              width="28"
-              height="28"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="cart-icon"
-            >
-              <circle cx="9" cy="21" r="1" />
-              <circle cx="20" cy="21" r="1" />
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-            </svg>
-            {cartItemCount > 0 && (
-              <span className="cart-badge">{cartItemCount}</span>
-            )}
-          </div>
-        </div>
-      </nav>
+      <Navbar active="home" />
 
       <button
         onClick={() => window.open("https://wa.me/6281296135571", "_blank")}
@@ -133,7 +121,8 @@ export default function HomePage() {
       <section
         className="hero-section-home"
         style={{
-          backgroundImage: 'url(https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/4aeceed3-c6b0-40d1-8234-6ec082d974c9/openart-image_SvCkyGSD_1753133761178_raw+%281%29.jpg)',
+          backgroundImage:
+            'url(https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/4aeceed3-c6b0-40d1-8234-6ec082d974c9/openart-image_SvCkyGSD_1753133761178_raw+%281%29.jpg)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
@@ -141,34 +130,48 @@ export default function HomePage() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          position: 'relative'
+          position: 'relative',
         }}
       >
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.4)'
-        }} />
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.4)',
+          }}
+        />
 
-        <div className="hero-content" style={{ position: 'relative', zIndex: 1, textAlign: 'center', color: 'white' }}>
-          <h1 style={{
-            fontSize: '4rem',
-            fontWeight: '800',
-            marginBottom: '1.5rem',
-            letterSpacing: '-1px',
-            textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
-          }}>
+        <div
+          className="hero-content"
+          style={{
+            position: 'relative',
+            zIndex: 1,
+            textAlign: 'center',
+            color: 'white',
+          }}
+        >
+          <h1
+            style={{
+              fontSize: '4rem',
+              fontWeight: '800',
+              marginBottom: '1.5rem',
+              letterSpacing: '-1px',
+              textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
+            }}
+          >
             Discover The Full Detail Of Your Music
           </h1>
-          <p style={{
-            fontSize: '1.75rem',
-            fontWeight: '300',
-            marginBottom: '2rem',
-            textShadow: '1px 1px 2px rgba(0,0,0,0.3)'
-          }}>
+          <p
+            style={{
+              fontSize: '1.75rem',
+              fontWeight: '300',
+              marginBottom: '2rem',
+              textShadow: '1px 1px 2px rgba(0,0,0,0.3)',
+            }}
+          >
             With Our Signature Euphoria Sound Technology
           </p>
           <button
@@ -184,7 +187,7 @@ export default function HomePage() {
               cursor: 'pointer',
               transition: 'all 0.3s ease',
               textTransform: 'uppercase',
-              letterSpacing: '1px'
+              letterSpacing: '1px',
             }}
             onMouseOver={(e) => {
               e.target.style.backgroundColor = 'white';
@@ -198,7 +201,7 @@ export default function HomePage() {
             LEARN MORE
           </button>
         </div>
-      </section>
+      </section>  
 
       {/* Featured Products Section */}
       <section className="featured-products-section">
@@ -388,8 +391,6 @@ export default function HomePage() {
             </a>
           </div>
 
-
-
           <div className="business-right">
             <h2 className="business-title">Peluang Bisnis<br />Di Antaraya !</h2>
 
@@ -407,7 +408,7 @@ export default function HomePage() {
               <li>• Dropshipper</li>
             </ul>
             <button
-              onClick={() => router.push('/')}
+              onClick={() => router.push('/about')}
               className="business-button"
             >
               SAYA TERTARIK!
@@ -416,69 +417,6 @@ export default function HomePage() {
         </div>
       </section>
 
-
-      {/* Footer */}
-      {/* <footer className="footer">
-        <div className="container">
-
-
-          <div className="footer-content">
-            <div className="footer-section">
-              <h3>Hubungi Kami</h3>
-              <p>Gading Serpong, +62 812-9613-5571</p>
-              <p>Jakarta Barat, +62 813-1898-3498</p>
-              <br />
-              <p>Senin-Jumat: 8.00 am - 17.30 pm</p>
-              <p>Sabtu: 8.00 am - 13.00 pm</p>
-            </div>
-            <div className="footer-section">
-              <h3>Ikuti Kami</h3>
-              <div className="social-links">
-                <a href="https://www.instagram.com/pt.antarayapersada/" className="social-link">Instagram</a>
-                <a href="https://shopee.co.id/antarayapersada" className="social-link">Shopee</a>
-                <a href="https://www.tokopedia.com/antaraya-1" className="social-link">Tokopedia</a>
-              </div>
-            </div>
-            <div className="footer-section">
-              <h3>ANTARAYA</h3>
-              <p>Premium audio equipment untuk pengalaman mendengar terbaik Anda.</p>
-            </div>
-          </div>
-
-          {/* Brand Logos Section */}
-          {/* <div className="footer-brands">
-            <div className="brand-logo-item">
-              <img
-                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/b06286ba-ff07-4798-b70d-548e404c6c24/Long+normal+26x7.5.png?format=750w"
-                alt="Antaraya"
-              />
-            </div>
-            <div className="brand-logo-item">
-              <img
-                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/4fa552a3-b070-4147-b2ef-39317c0384d1/Jive+Transparent+black.png?format=500w"
-                alt="Jive Audio"
-              />
-            </div>
-            <div className="brand-logo-item">
-              <img
-                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/b8cb54c1-ba98-40f4-b13c-c338b416739e/Alluve+long+inv+bg.png?format=750w"
-                alt="Alluve"
-              />
-            </div>
-            <div className="brand-logo-item">
-              <img
-                src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/19be8492-2927-49bd-9923-d8b605f00c0d/SINGLE+BEAN+Transparent.png?format=500w"
-                alt="Single Bean"
-              />
-            </div>
-          </div> */}
-
-
-          {/* <div className="footer-bottom">
-            <p>© 2024 Antaraya. All rights reserved.</p>
-          </div>
-        </div>
-      </footer> */}
     </div>
   );
 }

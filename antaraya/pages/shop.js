@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Navbar from '../components/Navbar';
 
 export default function ShopPage() {
   const router = useRouter();
@@ -10,23 +11,47 @@ export default function ShopPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [currentPage, setCurrentPage] = useState(1);
-  const [cartItemCount, setCartItemCount] = useState(0);
-  const productsPerPage = 8;
+  const [itemsPerPage, setItemsPerPage] = useState(8);
 
   useEffect(() => {
     fetchProducts();
-    updateCartCount();
   }, []);
 
   useEffect(() => {
     filterProducts();
   }, [products, searchQuery, statusFilter]);
 
-  const updateCartCount = () => {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const totalItems = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
-    setCartItemCount(totalItems);
-  };
+  // Responsif: ubah itemsPerPage berdasarkan lebar layar
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const updateItemsPerPage = () => {
+      const width = window.innerWidth;
+
+      if (width <= 710) {
+        // Mobile: 2 kolom
+        setItemsPerPage(6);
+      } else if (width <= 1024) {
+        // iPad / tablet: 3 kolom -> pakai kelipatan 3
+        setItemsPerPage(9);
+      } else {
+        // Desktop: 4 kolom -> pakai kelipatan 4
+        setItemsPerPage(8);
+      }
+    };
+
+    updateItemsPerPage();
+    window.addEventListener('resize', updateItemsPerPage);
+
+    return () => {
+      window.removeEventListener('resize', updateItemsPerPage);
+    };
+  }, []);
+
+  // Kalau itemsPerPage berubah, balik lagi ke page 1
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [itemsPerPage]);
 
   const fetchProducts = async () => {
     try {
@@ -69,68 +94,31 @@ export default function ShopPage() {
     }).format(price);
   };
 
-  const indexOfLastProduct = currentPage * productsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const indexOfLastProduct = currentPage * itemsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
   const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
-  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   return (
     <div className="main-container">
       {/* Navbar */}
-      <nav className="navbar">
-        <div className="navbar-container">
-          <div className="navbar-logo">
-            <img 
-              src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/2c7a0a58-e2d7-4e3b-99cb-7187e398953d/Logo+Putih+Transparent+Antaraya+Original.png?format=1500w" 
-              alt="Antaraya Logo"
-              onClick={() => router.push('/')}
-            />
-          </div>
-          <div className="navbar-menu">
-            <button onClick={() => router.push('/')} className="nav-link">
-              Home
-            </button>
-            <button onClick={() => router.push('/shop')} className="nav-link active">
-              Shop
-            </button>
-            <button onClick={() => router.push('/about')} className="nav-link">
-              About
-            </button>
-          </div>
-          <div className="navbar-cart" onClick={() => router.push('/checkout')}>
-            <svg 
-              width="28" 
-              height="28" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
-              strokeWidth="2" 
-              strokeLinecap="round" 
-              strokeLinejoin="round"
-              className="cart-icon"
-            >
-              <circle cx="9" cy="21" r="1"/>
-              <circle cx="20" cy="21" r="1"/>
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-            </svg>
-            {cartItemCount > 0 && (
-              <span className="cart-badge">{cartItemCount}</span>
-            )}
-          </div>
-        </div>
-      </nav>
+      <Navbar active="shop" />
+
       <button
-  onClick={() => window.open("https://wa.me/6281296135571", "_blank")}
-  className="whatsapp-floating-btn"
->
-  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
-</button>
-      {/* Hero Section */}
+        onClick={() => window.open("https://wa.me/6281296135571", "_blank")}
+        className="whatsapp-floating-btn"
+      >
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
+      </button>
+
+      {/* Hero Section - DENGAN BACKGROUND IMAGE */}
       <section 
         className="hero-section"
         style={{

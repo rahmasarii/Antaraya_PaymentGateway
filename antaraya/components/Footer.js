@@ -9,6 +9,14 @@ export default function Footer() {
   return (
     <footer className={styles.footer}>
       <div className={styles.container}>
+        {/* LOGO ANTARAYA DI ATAS */}
+        <div className={styles.footerHeader}>
+          <img
+            src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/b06286ba-ff07-4798-b70d-548e404c6c24/Long+normal+26x7.5.png?format=750w"
+            alt="Antaraya"
+            className={styles.mainLogo}
+          />
+        </div>
 
         <div className={styles.footerContent}>
           <div className={styles.footerSection}>
@@ -30,8 +38,8 @@ export default function Footer() {
             </p>
 
             <br />
-            <p>Senin–Jumat: 8.00 – 17.30</p>
-            <p>Sabtu: 8.00 – 13.00</p>
+            <p>Senin–Jumat: 8.00 am - 17.30 pm</p>
+            <p>Sabtu: 8.00 am - 13.00 pm</p>
           </div>
 
           <div className={styles.footerSection}>
@@ -51,12 +59,6 @@ export default function Footer() {
 
         {/* BRAND LOGOS */}
         <div className={styles.footerBrands}>
-          <div className={styles.brandLogoItem}>
-            <img
-              src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/b06286ba-ff07-4798-b70d-548e404c6c24/Long+normal+26x7.5.png?format=750w"
-              alt="Antaraya"
-            />
-          </div>
           <div className={styles.brandLogoItem}>
             <img
               src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/4fa552a3-b070-4147-b2ef-39317c0384d1/Jive+Transparent+black.png?format=500w"

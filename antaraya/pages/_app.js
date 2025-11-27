@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import axios from "axios";
 import Footer from "@/components/Footer";
-
+import Navbar from '../components/Navbar';
 import '../styles/global.css'; 
 import '../styles/home.css';
 import '../styles/shop.css';

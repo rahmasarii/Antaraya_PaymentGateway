@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
+import Navbar from '../components/Navbar';
 
 export default function Payment() {
   const [cart, setCart] = useState([]);
@@ -99,62 +100,11 @@ export default function Payment() {
     setLoading(false);
   };
 
-  // Navbar dengan struktur sama seperti di about.js
-  const Navbar = () => (
-    <nav className="navbar">
-      <div className="navbar-container">
-        <div className="navbar-logo">
-          <img
-            src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/2c7a0a58-e2d7-4e3b-99cb-7187e398953d/Logo+Putih+Transparent+Antaraya+Original.png?format=1500w"
-            alt="Antaraya Logo"
-            onClick={() => router.push("/")}
-          />
-        </div>
-        <div className="navbar-menu">
-          <button onClick={() => router.push("/")} className="nav-link">
-            Home
-          </button>
-          <button
-            onClick={() => router.push("/shop")}
-            className="nav-link active"
-          >
-            Shop
-          </button>
-          <button onClick={() => router.push("/about")} className="nav-link">
-            About
-          </button>
-        </div>
-        <div
-          className="navbar-cart"
-          onClick={() => router.push("/checkout")}
-        >
-          <svg
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="cart-icon"
-          >
-            <circle cx="9" cy="21" r="1" />
-            <circle cx="20" cy="21" r="1" />
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-          </svg>
-          {cartItemCount > 0 && (
-            <span className="cart-badge">{cartItemCount}</span>
-          )}
-        </div>
-      </div>
-    </nav>
-  );
 
   return (
     <div className="main-container">
-      {/* Navbar */}
-      <Navbar />
+      <Navbar active="shop" cartItemCount={cartItemCount} />
+
 
       <button
         onClick={() => window.open("https://wa.me/6281296135571", "_blank")}
@@ -176,15 +126,6 @@ export default function Payment() {
                 Cek kembali pesanan dan isi data pengiriman sebelum melakukan
                 pembayaran.
               </p>
-            </div>
-            <div className="payment-total-chip">
-              <span>Total Pembayaran</span>
-              <strong>
-                Rp
-                {totalPrice.toLocaleString("id-ID", {
-                  minimumFractionDigits: 0,
-                })}
-              </strong>
             </div>
           </div>
 

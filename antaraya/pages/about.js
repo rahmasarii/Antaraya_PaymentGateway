@@ -1,9 +1,10 @@
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
+import Navbar from '../components/Navbar';
+
 
 export default function AboutPage() {
   const router = useRouter();
-  const [cartItemCount, setCartItemCount] = useState(0);
   
   // Contact form state
   const [form, setForm] = useState({
@@ -15,15 +16,6 @@ export default function AboutPage() {
   });
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    updateCartCount();
-  }, []);
-
-  const updateCartCount = () => {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const totalItems = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
-    setCartItemCount(totalItems);
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -59,48 +51,8 @@ export default function AboutPage() {
   return (
     <div className="main-container">
       {/* Navbar */}
-      <nav className="navbar">
-        <div className="navbar-container">
-          <div className="navbar-logo">
-            <img 
-              src="https://images.squarespace-cdn.com/content/v1/68e5e6c1d684b33ea2171767/2c7a0a58-e2d7-4e3b-99cb-7187e398953d/Logo+Putih+Transparent+Antaraya+Original.png?format=1500w" 
-              alt="Antaraya Logo"
-              onClick={() => router.push('/')}
-            />
-          </div>
-          <div className="navbar-menu">
-            <button onClick={() => router.push('/')} className="nav-link">
-              Home
-            </button>
-            <button onClick={() => router.push('/shop')} className="nav-link">
-              Shop
-            </button>
-            <button onClick={() => router.push('/about')} className="nav-link active">
-              About
-            </button>
-          </div>
-          <div className="navbar-cart" onClick={() => router.push('/checkout')}>
-            <svg 
-              width="28" 
-              height="28" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
-              strokeWidth="2" 
-              strokeLinecap="round" 
-              strokeLinejoin="round"
-              className="cart-icon"
-            >
-              <circle cx="9" cy="21" r="1"/>
-              <circle cx="20" cy="21" r="1"/>
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-            </svg>
-            {cartItemCount > 0 && (
-              <span className="cart-badge">{cartItemCount}</span>
-            )}
-          </div>
-        </div>
-      </nav>
+      <Navbar active="about" />
+
 
             <button
   onClick={() => window.open("https://wa.me/6281296135571", "_blank")}

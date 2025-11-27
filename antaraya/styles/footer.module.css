@@ -5,11 +5,22 @@
   margin-top: auto;
 }
 
-/* Agar .container di footer sama seperti global.css */
 .container {
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 2rem;
+}
+
+/* LOGO ANTARAYA DI ATAS */
+.footerHeader {
+  padding: 1rem 0 0.5rem 2.5rem;
+}
+
+.mainLogo {
+  max-width: 200px;
+  height: auto;
+  filter: brightness(0) invert(1);
+  opacity: 0.95;
 }
 
 /* BAGIAN ATAS FOOTER */
@@ -34,17 +45,17 @@
 .footerSection p {
   color: #9ca3af;
   line-height: 1.8;
-  margin-bottom: 0.5rem;
   font-size: 0.9rem;
 }
 
-/* BRAND LOGOS */
+/* BRAND LOGOS - 3 LOGO RATA TENGAH */
 .footerBrands {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
   padding: 2rem 0;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .brandLogoItem {
@@ -94,7 +105,7 @@
   color: white;
 }
 
-/* Tooltip “Salin nomor telepon” */
+/* Tooltip "Salin nomor telepon" */
 .copyNumber:hover::after {
   content: "Salin nomor telepon";
   position: absolute;
@@ -125,12 +136,13 @@
   }
 
   .footerBrands {
-    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
   }
 }
 
 @media (max-width: 480px) {
   .footerBrands {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    gap: 1.5rem;
   }
 }
