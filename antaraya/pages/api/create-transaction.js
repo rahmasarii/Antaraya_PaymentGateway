@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     const { cart, customer } = req.body;
 
     if (!cart?.length) {
-      return res.status(400).json({ message: "Cart kosong atau tidak valid" });
+      return res.status(400).json({ message: "Cart Order sebelumnya sudah ada, silakan cek WA untuk link pembayaran" });
     }
 
     // ==============================================
@@ -56,7 +56,8 @@ export default async function handler(req, res) {
     const orderId = "order-" + Date.now();
 
     const snap = new midtransClient.Snap({
-      isProduction: false,
+      isProduction: "false",
+// isProduction: process.env.MIDTRANS_IS_PRODUCTION === "true",
       serverKey: process.env.MIDTRANS_SERVER_KEY,
     });
 

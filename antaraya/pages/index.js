@@ -10,9 +10,11 @@ export default function HomePage() {
   
   // Contact form state
   const [contactForm, setContactForm] = useState({
-    name: "",
-    email: "",
-    message: "",
+      firstName: "",
+      lastName: "",
+      email: "",
+      // subscribe: false,
+      message: "",
   });
   const [formLoading, setFormLoading] = useState(false);
 
@@ -322,11 +324,11 @@ export default function HomePage() {
                   <label htmlFor="name">Nama Anda:</label>
                   <input
                     type="text"
-                    id="name"
+                    id="firstName"
                     placeholder="Masukkan Nama"
                     required
-                    value={contactForm.name}
-                    onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                    value={contactForm.firstName}
+                    onChange={(e) => setContactForm({ ...contactForm, firstName: e.target.value })}
                   />
                 </div>
 
