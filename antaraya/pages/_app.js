@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import axios from "axios";
 import Footer from "@/components/Footer";
+import { useRouter } from "next/router";
 import Navbar from '../components/Navbar';
 import '../styles/global.css'; 
 import '../styles/home.css';
@@ -27,13 +28,16 @@ export default function MyApp({ Component, pageProps }) {
     document.body.appendChild(script);
   }, []);
 
+  const router = useRouter();
+  const hideFooterPages = ["/login", "/register", "/forgot-password"];
+
+  const hideFooter = hideFooterPages.includes(router.pathname);
   return (
     <>
       <div className="page-content"> 
         <Component {...pageProps} />
       </div>
-      {/* Footer muncul di semua halaman */}
-      <Footer />
+      {!hideFooter && <Footer />}
     </>
   );
 }

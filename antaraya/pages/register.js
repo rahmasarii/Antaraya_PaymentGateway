@@ -41,7 +41,7 @@ export default function RegisterPage() {
 
       if (res.status === 200) {
         setMsgType("success");
-        setMsg("OTP telah dikirim ke email owner");
+        setMsg("OTP telah dikirim ke nomor owner");
         setStep(2);
       }
     } catch (err) {

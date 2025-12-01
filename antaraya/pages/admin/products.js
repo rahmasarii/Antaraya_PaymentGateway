@@ -313,6 +313,15 @@ export default function AdminProducts() {
         {showAddModal && (
           <div className={styles.modalOverlay}>
             <div className={styles.modalBox}>
+              <button
+                type="button"
+                className={styles.modalCloseIcon}
+                onClick={() => setShowAddModal(false)}
+                disabled={uploading}
+                aria-label="Close"
+              >
+                ×
+              </button>
               <h2 className={styles.modalTitle}>Add New Product</h2>
 
               <form onSubmit={handleSubmit}>
@@ -359,7 +368,7 @@ export default function AdminProducts() {
                     name="displayImage"
                     value={form.displayImage}
                     onChange={handleChange}
-                    placeholder="Enter image URL"
+                    placeholder="Enter image URL or upload image"
                     className={styles.formInput}
                   />
                   <input
@@ -377,7 +386,9 @@ export default function AdminProducts() {
                 {/* GALLERY IMAGES */}
                 <div className={styles.sectionBox}>
                   <h3 className={styles.sectionTitle}>Gallery Images</h3>
-                  <div style={{ display: "flex", gap: "8px" }}>
+
+                  {/* Input URL + tombol Add */}
+                  <div style={{ display: "flex", gap: "8px", marginBottom: "8px" }}>
                     <input
                       value={galleryInput}
                       onChange={(e) => setGalleryInput(e.target.value)}
@@ -393,6 +404,8 @@ export default function AdminProducts() {
                       Add URL
                     </button>
                   </div>
+
+                  {/* Upload file untuk menambah gambar gallery */}
                   <input
                     type="file"
                     accept="image/*"
@@ -403,43 +416,33 @@ export default function AdminProducts() {
                     className={styles.formInput}
                     disabled={uploading}
                   />
+
                   {/* PREVIEW GALLERY */}
-                  <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginTop: "8px" }}>
-                    {form.galleryImages.map((img, i) => (
-                      <div key={i} style={{ position: "relative" }}>
-                        <img
-                          src={img}
-                          style={{
-                            width: "38px",
-                            height: "38px",
-                            objectFit: "cover",
-                            borderRadius: "5px",
-                            border: "1px solid #ccc",
-                          }}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => removeGalleryImage(i)}
-                          style={{
-                            position: "absolute",
-                            top: "-6px",
-                            right: "-6px",
-                            width: "18px",
-                            height: "18px",
-                            borderRadius: "50%",
-                            background: "red",
-                            color: "white",
-                            border: "none",
-                            fontSize: "10px",
-                            cursor: "pointer",
-                          }}
-                        >
-                          ×
-                        </button>
-                      </div>
-                    ))}
-                  </div>
+                  {form.galleryImages.length > 0 && (
+                    <div className={styles.galleryGrid}>
+                      {form.galleryImages.map((img, i) => (
+                        <div key={i} className={styles.galleryItem}>
+                          {img && (
+                            <img
+                              src={img}
+                              alt={`Gallery ${i + 1}`}
+                              className={styles.galleryThumb}
+                            />
+                          )}
+
+                          <button
+                            type="button"
+                            className={styles.galleryRemoveBtn}
+                            onClick={() => removeGalleryImage(i)}
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
+
 
                 {/* STATUS */}
                 <div className={styles.formGroup}>
@@ -471,7 +474,7 @@ export default function AdminProducts() {
                     onChange={(e) =>
                       setColorInput({ ...colorInput, image: e.target.value })
                     }
-                    placeholder="Color Image URL"
+                    placeholder="Color Image URL or upload color image"
                     className={styles.formInput}
                   />
                   <input
@@ -550,14 +553,15 @@ export default function AdminProducts() {
               </form>
 
 
-              <button
+
+              {/* <button
                 type="button"
                 onClick={() => setShowAddModal(false)}
                 className={styles.modalClose}
                 disabled={uploading}
               >
                 Close
-              </button>
+              </button> */}
             </div>
           </div>
         )}
@@ -566,6 +570,14 @@ export default function AdminProducts() {
         {editProduct && (
           <div className={styles.modalOverlay}>
             <div ref={editSectionRef} className={styles.modalBox}>
+              <button
+                type="button"
+                className={styles.modalCloseIcon}
+                onClick={() => setEditProduct(null)}
+                aria-label="Close"
+              >
+                ×
+              </button>
               <h2 className={styles.modalTitle}>Edit Product</h2>
 
               {/* NAME */}
@@ -620,7 +632,7 @@ export default function AdminProducts() {
                     })
                   }
                   className={styles.formInput}
-                  placeholder="Image URL"
+                  placeholder="Image URL or upload image"
                 />
                 <input
                   type="file"
@@ -654,7 +666,7 @@ export default function AdminProducts() {
                 {/* Add URL */}
                 <div style={{ display: "flex", gap: "8px", marginBottom: "8px" }}>
                   <input
-                    placeholder="New Image URL"
+                    placeholder="New Image URL or upload new image"
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         e.preventDefault();
@@ -698,22 +710,17 @@ export default function AdminProducts() {
                 />
 
                 {/* PREVIEW + EDIT EACH GALLERY */}
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginTop: "8px" }}>
+                <div className={styles.galleryGrid}>
                   {editProduct.galleryImages.map((img, i) => (
-                    <div key={i} style={{ position: "relative", width: "82px", textAlign: "center" }}>
+                    <div key={i} className={styles.galleryItem}>
                       {img && (
                         <img
                           src={img}
-                          style={{
-                            width: "38px",
-                            height: "38px",
-                            objectFit: "cover",
-                            borderRadius: "6px",
-                            border: "1px solid #ccc",
-                            margin: "0 auto 6px",
-                          }}
+                          alt={`Gallery ${i + 1}`}
+                          className={styles.galleryThumb}
                         />
                       )}
+
                       <input
                         value={img}
                         onChange={(e) => {
@@ -724,6 +731,7 @@ export default function AdminProducts() {
                         className={styles.formInput}
                         placeholder="Image URL"
                       />
+
                       <input
                         type="file"
                         accept="image/*"
@@ -734,33 +742,25 @@ export default function AdminProducts() {
                         className={styles.formInput}
                         disabled={uploading}
                       />
+
                       <button
                         type="button"
+                        className={styles.galleryRemoveBtn}
                         onClick={() =>
                           setEditProduct({
                             ...editProduct,
-                            galleryImages: editProduct.galleryImages.filter((_, idx) => idx !== i),
+                            galleryImages: editProduct.galleryImages.filter(
+                              (_, idx) => idx !== i
+                            ),
                           })
                         }
-                        style={{
-                          position: "absolute",
-                          top: "-6px",
-                          right: "-6px",
-                          width: "18px",
-                          height: "18px",
-                          background: "red",
-                          color: "white",
-                          borderRadius: "50%",
-                          border: "none",
-                          cursor: "pointer",
-                          fontSize: "10px",
-                        }}
                       >
                         ×
                       </button>
                     </div>
                   ))}
                 </div>
+
               </div>
 
               {/* STATUS */}
@@ -789,7 +789,7 @@ export default function AdminProducts() {
                   id="colorNameInput"
                 />
                 <input
-                  placeholder="Color Image URL"
+                  placeholder="Color Image URL or upload color image"
                   className={styles.formInput}
                   id="colorImageInput"
                 />
@@ -867,7 +867,7 @@ export default function AdminProducts() {
                       <input
                         className={styles.formInput}
                         value={c.image}
-                        placeholder="Image URL"
+                        placeholder="Image URL or upload image"
                         onChange={(e) => {
                           const updated = [...editProduct.colors];
                           updated[i].image = e.target.value;
@@ -923,14 +923,6 @@ export default function AdminProducts() {
                 {uploading ? "Saving..." : "Save Changes"}
               </button>
 
-              {/* CLOSE */}
-              <button
-                type="button"
-                onClick={() => setEditProduct(null)}
-                className={styles.modalClose}
-              >
-                Close
-              </button>
             </div>
           </div>
         )}

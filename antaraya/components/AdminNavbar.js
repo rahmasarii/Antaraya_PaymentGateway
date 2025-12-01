@@ -1,49 +1,17 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styles from "../styles/AdminNavbar.module.css";
 
 export default function AdminNavbar({ onLogout }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
 
-  const [activeSection, setActiveSection] = useState("rekap");
-
   const isDashboard = router.pathname === "/admin";
   const isProducts = router.pathname === "/admin/products";
-
-  /* Detect active section while scrolling */
-  useEffect(() => {
-    if (!isDashboard) return;
-
-    const handleScroll = () => {
-      const rekap = document.getElementById("rekap");
-      const transaksi = document.getElementById("transaksi");
-
-      const scrollPos = window.scrollY + 150;
-
-      if (transaksi && scrollPos >= transaksi.offsetTop) {
-        setActiveSection("transaksi");
-      } else {
-        setActiveSection("rekap");
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [isDashboard]);
-
-  const scrollTo = (id) => {
-    const element = document.getElementById(id);
-    if (!element) return router.push(`/admin?section=${id}`);
-
-    element.scrollIntoView({ behavior: "smooth" });
-    setOpen(false);
-  };
 
   return (
     <nav className={styles.navbar}>
       <div className={styles.navbarContainer}>
-
         {/* LOGO */}
         <div
           className={styles.navbarLogo}
@@ -65,29 +33,17 @@ export default function AdminNavbar({ onLogout }) {
             open ? styles.navbarMenuActive : ""
           }`}
         >
-
-          {/* REKAP */}
+          {/* REKAP (dashboard utama) */}
           <button
             className={`${styles.navLink} ${
-              isDashboard && activeSection === "rekap"
-                ? styles.navLinkActive
-                : ""
+              isDashboard ? styles.navLinkActive : ""
             }`}
-            onClick={() => scrollTo("rekap")}
+            onClick={() => {
+              router.push("/admin");
+              setOpen(false);
+            }}
           >
             Rekap Penjualan
-          </button>
-
-          {/* TRANSAKSI */}
-          <button
-            className={`${styles.navLink} ${
-              isDashboard && activeSection === "transaksi"
-                ? styles.navLinkActive
-                : ""
-            }`}
-            onClick={() => scrollTo("transaksi")}
-          >
-            Daftar Transaksi
           </button>
 
           {/* PRODUK */}
@@ -95,13 +51,22 @@ export default function AdminNavbar({ onLogout }) {
             className={`${styles.navLink} ${
               isProducts ? styles.navLinkActive : ""
             }`}
-            onClick={() => router.push("/admin/products")}
+            onClick={() => {
+              router.push("/admin/products");
+              setOpen(false);
+            }}
           >
             Daftar Produk
           </button>
 
           {/* LOGOUT */}
-          <button className={styles.navLink} onClick={onLogout}>
+          <button
+            className={styles.navLink}
+            onClick={() => {
+              setOpen(false);
+              onLogout();
+            }}
+          >
             Logout
           </button>
         </div>
