@@ -91,22 +91,24 @@
 }
 
 .modalCloseIcon {
-  position: absolute;
+  position: sticky;
   top: 10px;
   right: 10px;
-  width: 28px;
-  height: 28px;
+  margin-left: auto;
+  width: 32px;
+  height: 32px;
   border-radius: 999px;
   border: none;
-  background: rgba(0, 0, 0, 0.04);
+  background: rgba(0, 0, 0, 0.06);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 20px;
   line-height: 1;
   color: #555;
   transition: background 0.15s ease, color 0.15s ease, transform 0.05s ease;
+  z-index: 50;
 }
 
 .modalCloseIcon:hover {

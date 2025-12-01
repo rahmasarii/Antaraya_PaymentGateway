@@ -392,17 +392,9 @@ export default function AdminProducts() {
                     <input
                       value={galleryInput}
                       onChange={(e) => setGalleryInput(e.target.value)}
-                      placeholder="Image URL"
+                      placeholder="Type image URL or upload image"
                       className={styles.formInput}
                     />
-                    <button
-                      type="button"
-                      onClick={addGalleryImage}
-                      className="bg-green-600 text-white px-3 rounded"
-                      disabled={uploading}
-                    >
-                      Add URL
-                    </button>
                   </div>
 
                   {/* Upload file untuk menambah gambar gallery */}
@@ -497,50 +489,37 @@ export default function AdminProducts() {
                   </button>
 
                   {/* PREVIEW COLOR LIST */}
-                  <div style={{ marginTop: "8px" }}>
-                    {form.colors.map((c, i) => (
-                      <div
-                        key={i}
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          border: "1px solid #ddd",
-                          padding: "8px",
-                          borderRadius: "6px",
-                          marginBottom: "6px",
-                        }}
-                      >
-                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  {form.colors.length > 0 && (
+                    <div className={styles.galleryGrid} style={{ marginTop: "8px" }}>
+                      {form.colors.map((c, i) => (
+                        <div key={i} className={styles.galleryItem}>
+                          {/* thumbnail warna */}
                           {c.image && (
                             <img
                               src={c.image}
-                              style={{
-                                width: "32px",
-                                height: "32px",
-                                borderRadius: "4px",
-                                objectFit: "cover",
-                              }}
+                              alt={c.colorName || `Color ${i + 1}`}
+                              className={styles.galleryThumb}
                             />
                           )}
-                          <span>{c.colorName}</span>
+
+                          {/* nama warna (label saja, bukan input, karena input utama sudah di atas) */}
+                          <div style={{ marginTop: c.image ? "8px" : 0 }}>
+                            <strong>{c.colorName || "Unnamed color"}</strong>
+                          </div>
+
+                          {/* tombol hapus warna */}
+                          <button
+                            type="button"
+                            className={styles.galleryRemoveBtn}
+                            onClick={() => removeColor(i)}
+                          >
+                            ×
+                          </button>
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => removeColor(i)}
-                          style={{
-                            color: "red",
-                            border: "none",
-                            background: "transparent",
-                            fontSize: "16px",
-                            cursor: "pointer",
-                          }}
-                        >
-                          ×
-                        </button>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )}
+
                 </div>
 
                 <button
@@ -551,17 +530,6 @@ export default function AdminProducts() {
                   {uploading ? "Uploading..." : "Add Product"}
                 </button>
               </form>
-
-
-
-              {/* <button
-                type="button"
-                onClick={() => setShowAddModal(false)}
-                className={styles.modalClose}
-                disabled={uploading}
-              >
-                Close
-              </button> */}
             </div>
           </div>
         )}
@@ -680,21 +648,6 @@ export default function AdminProducts() {
                     }}
                     className={styles.formInput}
                   />
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      const input = e.target.previousElementSibling;
-                      if (!input.value) return;
-                      setEditProduct({
-                        ...editProduct,
-                        galleryImages: [...editProduct.galleryImages, input.value],
-                      });
-                      input.value = "";
-                    }}
-                    className={styles.modalBtnPrimary}
-                  >
-                    Add URL
-                  </button>
                 </div>
 
                 {/* Upload new file */}
@@ -840,77 +793,69 @@ export default function AdminProducts() {
                   Add Color Variant
                 </button>
 
-                {/* Color list */}
-                <div style={{ marginTop: "8px", display: "flex", flexWrap: "wrap", gap: "8px" }}>
+                {/* Preview Color list */}
+                <div className={styles.galleryGrid} style={{ marginTop: "8px" }}>
                   {editProduct.colors.map((c, i) => (
-                    <div key={i} style={{ width: "88px", border: "1px solid #ccc", borderRadius: "6px", padding: "6px", position: "relative", textAlign: "center" }}>
+                    <div key={i} className={styles.galleryItem}>
                       <img
                         src={c.image || "/no-image.png"}
-                        style={{
-                          width: "38px",
-                          height: "38px",
-                          objectFit: "cover",
-                          borderRadius: "5px",
-                          marginBottom: "4px",
-                        }}
+                        alt={c.colorName || `Color ${i + 1}`}
+                        className={styles.galleryThumb}
                       />
+
+                      {/* input Color Name (bisa diedit) */}
                       <input
                         className={styles.formInput}
                         value={c.colorName}
+                        placeholder="Color Name"
                         onChange={(e) => {
                           const updated = [...editProduct.colors];
-                          updated[i].colorName = e.target.value;
+                          updated[i] = { ...updated[i], colorName: e.target.value };
                           setEditProduct({ ...editProduct, colors: updated });
                         }}
-                        placeholder="Color Name"
                       />
+
+                      {/* input URL gambar */}
                       <input
                         className={styles.formInput}
                         value={c.image}
                         placeholder="Image URL or upload image"
                         onChange={(e) => {
                           const updated = [...editProduct.colors];
-                          updated[i].image = e.target.value;
+                          updated[i] = { ...updated[i], image: e.target.value };
                           setEditProduct({ ...editProduct, colors: updated });
                         }}
                       />
+
+                      {/* upload file untuk ganti gambar warna */}
                       <input
                         type="file"
                         accept="image/*"
+                        className={styles.formInput}
+                        disabled={uploading}
                         onChange={(e) => {
                           const file = e.target.files[0];
                           if (file) handleEditFileUpload(file, "color", i);
                         }}
-                        className={styles.formInput}
-                        disabled={uploading}
                       />
+
+                      {/* tombol hapus (X merah di pojok kanan atas) */}
                       <button
                         type="button"
+                        className={styles.galleryRemoveBtn}
                         onClick={() =>
                           setEditProduct({
                             ...editProduct,
                             colors: editProduct.colors.filter((_, idx) => idx !== i),
                           })
                         }
-                        style={{
-                          position: "absolute",
-                          top: "-6px",
-                          right: "-6px",
-                          width: "18px",
-                          height: "18px",
-                          background: "red",
-                          color: "white",
-                          borderRadius: "50%",
-                          border: "none",
-                          cursor: "pointer",
-                          fontSize: "10px",
-                        }}
                       >
                         ×
                       </button>
                     </div>
                   ))}
                 </div>
+
               </div>
 
               {/* SAVE BUTTON */}
