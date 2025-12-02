@@ -342,7 +342,7 @@ const totalProductsSold = transactions.checkout
               </div>
             </div>
 
-            {/* Card kecil di bawah tombol periode */}
+            {/* Card kecil di bawah tombol periode
             <div className={styles["chart-stats"]}>
               <div className={styles["chart-stat-card"]}>
                 <span className={styles["chart-stat-label"]}>
@@ -360,7 +360,7 @@ const totalProductsSold = transactions.checkout
                   Rp {periodStats.totalRevenue.toLocaleString("id-ID")}
                 </span>
               </div>
-            </div>
+            </div> */}
 
             <div className={styles["chart-wrapper"]}>
               <button
