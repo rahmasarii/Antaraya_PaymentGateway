@@ -50,14 +50,24 @@ export default function AdminDashboard() {
     updateChartData();
   }, [selectedChart, daily, weekly, monthly, currentIndex]);
 
-  // Fungsi untuk menapilkan total pendapatan (semua transaksi)
-  const totalRevenue = transactions.checkout.reduce(
-    (sum, c) => sum + (c.total || 0),
-    0
-  );
+  const isPaid = (status) => {
+  if (!status) return false;
+  const s = status.toLowerCase();
+  return ["paid", "success", "settlement", "completed"].includes(s);
+};
 
-  const totalProductsSold = transactions.checkout.reduce(
-    (sum, c) => sum + c.items.reduce((s, item) => s + item.qty, 0),
+
+  // Fungsi untuk menapilkan total pendapatan (semua transaksi)
+const totalRevenue = transactions.checkout
+  .filter((c) => isPaid(c.status))
+  .reduce((sum, c) => sum + (c.total || 0), 0);
+
+
+const totalProductsSold = transactions.checkout
+  .filter((c) => isPaid(c.status))
+  .reduce(
+    (sum, c) =>
+      sum + c.items.reduce((s, item) => s + (item.qty || 0), 0),
     0
   );
 
@@ -192,19 +202,20 @@ export default function AdminDashboard() {
 
   if (rangeStart && rangeEnd && transactions?.checkout) {
     transactions.checkout.forEach((c) => {
-      const created = new Date(c.createdAt);
-      if (created >= rangeStart && created <= rangeEnd) {
-        // Total pendapatan
-        totalRevenueRange += c.total || 0;
+  if (!isPaid(c.status)) return; // hanya paid
 
-        // Total produk (jumlah qty semua item)
-        if (Array.isArray(c.items)) {
-          c.items.forEach((item) => {
-            totalProductsRange += item.qty || 0;
-          });
-        }
-      }
-    });
+  const created = new Date(c.createdAt);
+  if (created >= rangeStart && created <= rangeEnd) {
+    totalRevenueRange += c.total || 0;
+
+    if (Array.isArray(c.items)) {
+      c.items.forEach((item) => {
+        totalProductsRange += item.qty || 0;
+      });
+    }
+  }
+});
+
   }
 
   // Kalau tidak ada data sama sekali, fallback ke 0

@@ -56,8 +56,8 @@ export default async function handler(req, res) {
     const orderId = "order-" + Date.now();
 
     const snap = new midtransClient.Snap({
-      isProduction: "false",
-// isProduction: process.env.MIDTRANS_IS_PRODUCTION === "true",
+      // isProduction: false,
+isProduction: process.env.MIDTRANS_IS_PRODUCTION === "true",
       serverKey: process.env.MIDTRANS_SERVER_KEY,
     });
 
