@@ -53,7 +53,7 @@ export default function AdminDashboard() {
   const isPaid = (status) => {
   if (!status) return false;
   const s = status.toLowerCase();
-  return ["paid", "success", "settlement", "completed"].includes(s);
+  return ["paid", "PAID", "success", "settlement", "completed"].includes(s);
 };
 
 const updateStatus = async (id, newStatus) => {
@@ -538,7 +538,7 @@ const totalProductsSold = transactions.checkout
     }}
   >
     <option value={c.status}>{c.status}</option>
-    <option value="paid">paid</option>
+    <option value="PAID">PAID</option>
     <option value="cancelled">cancelled</option>
   </select>
 </td>
