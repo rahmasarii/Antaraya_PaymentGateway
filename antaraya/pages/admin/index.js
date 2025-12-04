@@ -56,6 +56,35 @@ export default function AdminDashboard() {
   return ["paid", "success", "settlement", "completed"].includes(s);
 };
 
+const updateStatus = async (id, newStatus) => {
+  try {
+    const res = await fetch(`/api/admin/update-status`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, status: newStatus }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert("Gagal update status");
+      return;
+    }
+
+    // Update state tanpa reload halaman
+    setTransactions((prev) => ({
+      ...prev,
+      checkout: prev.checkout.map((item) =>
+        item._id === id ? { ...item, status: newStatus } : item
+      ),
+    }));
+
+    alert("Status berhasil diperbarui!");
+  } catch (err) {
+    console.error(err);
+    alert("Error update status");
+  }
+};
 
   // Fungsi untuk menapilkan total pendapatan (semua transaksi)
 const totalRevenue = transactions.checkout
@@ -472,15 +501,50 @@ const totalProductsSold = transactions.checkout
                       <td>{c.customer?.courier}</td>
                       <td>{c.customer?.address}</td>
                       <td>{c.customer?.description}</td>
-                      <td>
-                        <span
-                          className={`${styles["status"]} ${
-                            styles[`status-${c.status?.toLowerCase()}`]
-                          }`}
-                        >
-                          {c.status}
-                        </span>
-                      </td>
+<td>
+  <select
+    value={c.status || "pending"}
+    onChange={async (e) => {
+      const newStatus = e.target.value;
+
+      try {
+        const res = await fetch("/api/admin/update-status", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            orderId: c.orderId,
+            status: newStatus,
+          }),
+        });
+
+        if (res.ok) {
+          alert("Status updated!");
+          // refresh tanpa reload:
+          setTransactions((prev) => ({
+            ...prev,
+            checkout: prev.checkout.map((item) =>
+              item.orderId === c.orderId
+                ? { ...item, status: newStatus }
+                : item
+            ),
+          }));
+        } else {
+          alert("Failed to update");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Error updating status");
+      }
+    }}
+  >
+    <option value={c.status}>{c.status}</option>
+    <option value="paid">paid</option>
+    <option value="cancelled">cancelled</option>
+  </select>
+</td>
+
+
+                      
                       <td>Rp {c.total?.toLocaleString("id-ID")}</td>
                       <td>
                         {new Date(c.createdAt).toLocaleString("id-ID")}

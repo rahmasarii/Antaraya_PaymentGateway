@@ -19,7 +19,9 @@ const CheckoutSchema = new mongoose.Schema({
   subtotal: Number,
   shipping_fee: Number,
   total: Number,
-  status: { type: String, default: 'PENDING' } // PENDING, PAID, EXPIRED, CANCELLED
+  status: { type: String, default: 'PENDING' }, // PENDING, PAID, EXPIRED, CANCELLED
+  paymentProof: String,
+
 }, { timestamps: true });
 
 export default mongoose.models.Checkout || mongoose.model('Checkout', CheckoutSchema);
