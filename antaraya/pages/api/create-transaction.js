@@ -52,7 +52,10 @@ export default async function handler(req, res) {
     // 🆕 3) Buat order baru
     // ==============================================
 
-    const gross_amount = cart.reduce((sum, item) => sum + (item.price || 0), 0);
+const gross_amount = cart.reduce(
+  (sum, item) => sum + (item.price || 0) * (item.qty || item.quantity || 1),
+  0
+);
     const orderId = "order-" + Date.now();
 
     const snap = new midtransClient.Snap({
