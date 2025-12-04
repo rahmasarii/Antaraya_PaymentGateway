@@ -411,11 +411,11 @@
   background-color: #ffffff;
   padding: 3rem;
   border-radius: 20px;
-  box-shadow: 0 10px 40px white;
   border: 1px solid #e5e7eb;
   transition: all 0.3s ease;
   width: 100%;
   max-width: 100%;  
+  margin: 0 auto;
 }
 
 .contact-form-wrapper:hover {
@@ -592,6 +592,7 @@
 
   .contact-grid {
     gap: 2rem;
+    padding: 0 1rem;
   }
     .business-opportunity-container {
     grid-template-columns: 1fr;
