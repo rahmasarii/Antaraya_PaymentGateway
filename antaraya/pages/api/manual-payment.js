@@ -27,6 +27,11 @@ export default async function handler(req, res) {
       0
     );
 
+    const itemListText = cart
+  .map(item => `- ${item.name} x${item.qty || 1} (${item.color || "-"})`)
+  .join("\n");
+
+
     // Simpan ke DB
     await Checkout.create({
       orderId,
